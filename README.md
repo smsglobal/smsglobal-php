@@ -17,7 +17,7 @@ This is an SDK for the SMSGlobal REST API. Get an API key from SMSGlobal by sign
 To install the PHP client library to your project, we recommend using [Composer](https://getcomposer.org/).
 
 ```bash
-composer require smsglobal/smsglobal-php --no-dev
+composer require smsglobal/smsglobal-php
 ```
 
 ### Usage
