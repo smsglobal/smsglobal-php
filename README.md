@@ -1,7 +1,7 @@
 # SMSGlobal Dotnet
 
-[![Latest Version](https://img.shields.io/github/release/smsglobal/smsglobal-php.svg?style=flat-square)](https://github.com/smsglobal/smsglobal-php/releases)
-[![Total Downloads](https://img.shields.io/packagist/dt/smsglobal/smsglobal-php.svg?style=flat-square)](https://packagist.org/packages/smsglobal/smsglobal-php)
+[![Latest Version](https://img.shields.io/github/release/smsglobal/smsglobal-php.svg?style=flat)](https://github.com/smsglobal/smsglobal-php/releases)
+[![Total Downloads](https://img.shields.io/packagist/dt/smsglobal/smsglobal-php.svg?style=flat)](https://packagist.org/packages/smsglobal/smsglobal-php)
 ![Build](https://github.com/smsglobal/smsglobal-php/workflows/Build/badge.svg)
 
 ### SMSGlobal REST API and Libraries for PHP
