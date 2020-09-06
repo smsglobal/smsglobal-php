@@ -32,3 +32,11 @@ jobs:
 
     - name: test
       run: ./vendor/bin/phpunit tests
+      
+    - name: Codecov Coverage Report
+      uses: codecov/codecov-action@v1
+      with: 
+        token: ${{ secrets.CODECOV_TOKEN }}
+        file: ./clover.xml
+        flags: unittests
+        fail_ci_if_err: true
