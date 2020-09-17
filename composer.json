@@ -1,6 +1,6 @@
 {
   "name": "smsglobal/smsglobal-php",
-  "description": "Official SMSGlobal PHP Client Library",
+  "description": "SMSGlobal PHP Client Library",
   "type": "library",
   "keywords": ["smsglobal", "restapi", "rest", "api", "php", "sms", "sdk", "library"],
   "homepage": "https://www.smsglobal.com/developers/",

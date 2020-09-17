@@ -1,4 +1,4 @@
-# Official SMSGlobal PHP Client Library
+# SMSGlobal PHP Client Library
 
 ![Build](https://github.com/smsglobal/smsglobal-php/workflows/Build/badge.svg)
 ![Coverage](https://img.shields.io/codecov/c/gh/smsglobal/smsglobal-php)
