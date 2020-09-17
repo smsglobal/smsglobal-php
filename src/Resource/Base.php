@@ -44,7 +44,7 @@ class Base
     /**
      * @var string
      */
-    protected $userAgent = 'SMSGlobal-SDK/1.0.0, PHP/1.0.0';
+    protected $userAgent = "SMSGlobal-SDK/v2 Version/1.0.0 PHP/" . PHP_VERSION . " (" . PHP_OS . "; " . OPENSSL_VERSION_TEXT. ")";
 
     /**
      * @var Client|ClientInterface|null
