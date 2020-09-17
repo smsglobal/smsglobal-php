@@ -19,7 +19,8 @@ use SMSGlobal\Exceptions\ResourceNotFoundException;
  */
 class Base
 {
-    const HASH_ALGORITHM = 'sha256';
+
+    const CLIENT_VERSION = '1.0.4';
 
     /**
      * @var Credentials null
@@ -44,7 +45,7 @@ class Base
     /**
      * @var string
      */
-    protected $userAgent = "SMSGlobal-SDK/v2 Version/1.0.0 PHP/" . PHP_VERSION . " (" . PHP_OS . "; " . OPENSSL_VERSION_TEXT. ")";
+    protected $userAgent = "SMSGlobal-SDK/v2 Version/" . self::CLIENT_VERSION . " PHP/" . PHP_VERSION . " (" . PHP_OS . "; " . OPENSSL_VERSION_TEXT. ")";
 
     /**
      * @var Client|ClientInterface|null
