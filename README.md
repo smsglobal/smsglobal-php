@@ -1,4 +1,4 @@
-# SMSGlobal PHP SDK
+# SMSGlobal PHP Client Library
 
 ![Build](https://github.com/smsglobal/smsglobal-php/workflows/Build/badge.svg)
 ![Coverage](https://img.shields.io/codecov/c/gh/smsglobal/smsglobal-php)
@@ -7,7 +7,9 @@
 
 ### SMSGlobal REST API and Libraries for PHP
 
-This is an SDK for the SMSGlobal REST API. Get an API key from SMSGlobal by signing up and viewing the API key page in the MXT platform. Learn more [www.smsglobal.com](https://www.smsglobal.com/)
+This is a PHP Client library for SMSGlobal’s REST API to integrate SMS capabilities into your PHP application.
+
+Sign up for a [free SMSGlobal account](https://www.smsglobal.com/mxt-sign-up/?utm_source=dev&utm_medium=github&utm_campaign=php_sdk) today and get your API Key from our advanced SMS platform, MXT. Plus, enjoy unlimited free developer sandbox testing to try out your API in full!
 
 ### Requirements
 
@@ -72,6 +74,6 @@ With coverage (requires extension pcov or xdebug)
 
 ### Getting help
 
-View the [REST API](https://www.smsglobal.com/rest-api/) documentation for a list of available resources.
+View the [REST API](https://www.smsglobal.com/rest-api/?utm_source=dev&utm_medium=github&utm_campaign=php_sdk) documentation for a list of available resources.
 
-For more queries contact [www.smsglobal.com](https://www.smsglobal.com/contact/) 
+For any query [contact us](https://www.smsglobal.com/contact/?utm_source=dev&utm_medium=github&utm_campaign=php_sdk)
