@@ -3,7 +3,7 @@
   "description": "SMSGlobal PHP Client Library",
   "type": "library",
   "keywords": ["smsglobal", "restapi", "rest", "api", "php", "sms", "sdk", "library"],
-  "homepage": "https://www.smsglobal.com/developers/",
+  "homepage": "https://www.smsglobal.com/developers/?utm_source=dev&utm_medium=packagist&utm_campaign=php_sdk",
   "license": "MIT",
   "authors": [
     {
