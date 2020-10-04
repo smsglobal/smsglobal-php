@@ -76,4 +76,4 @@ With coverage (requires extension pcov or xdebug)
 
 View the [REST API](https://www.smsglobal.com/rest-api/?utm_source=dev&utm_medium=github&utm_campaign=php_sdk) documentation for a list of available resources.
 
-For more queries contact [www.smsglobal.com](https://www.smsglobal.com/contact/?utm_source=dev&utm_medium=github&utm_campaign=php_sdk) 
+For any query [contact us](https://www.smsglobal.com/contact/?utm_source=dev&utm_medium=github&utm_campaign=php_sdk)
