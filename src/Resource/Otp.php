@@ -68,7 +68,7 @@ class Otp extends Base
 
         $uri = $this->prepareApiUri($this->resourceUri . '/' . $requestId);
 
-        $jsonPayload = json_encode(compact($code), JSON_FORCE_OBJECT);
+        $jsonPayload = json_encode(compact('code'), JSON_FORCE_OBJECT);
 
         if (!$jsonPayload) {
             throw new InvalidPayloadException('Invalid payload ' . json_last_error_msg());
