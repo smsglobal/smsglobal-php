@@ -23,7 +23,7 @@ class Otp extends Base
      * @param string $to
      * @param string $text
      * @param string|null $from
-     * @param int $codeExpirt
+     * @param int $codeExpiry
      * @param int $length
      * @param \DateTime|null $messageExpiryDateTime
      *
@@ -68,9 +68,7 @@ class Otp extends Base
 
         $uri = $this->prepareApiUri($this->resourceUri . '/' . $requestId);
 
-        $jsonPayload = json_encode([
-            'code' => $code,
-        ], JSON_FORCE_OBJECT);
+        $jsonPayload = json_encode(compact($code), JSON_FORCE_OBJECT);
 
         if (!$jsonPayload) {
             throw new InvalidPayloadException('Invalid payload ' . json_last_error_msg());

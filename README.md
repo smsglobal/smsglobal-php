@@ -68,7 +68,24 @@ try {
 }
 ```
 
+The following json response will be returned by the server:
+
+```json
+
+{
+    "requestId": "404372541683674336263499",
+    "validUnitlTimestamp": "2020-11-18 16:24:51",
+    "createdTimestamp": "2020-11-18 16:22:51",
+    "lastEventTimestamp": "2020-11-18 16:22:51",
+    "status": "Sent"
+}
+
+```
+
+
 **Verify OTP**
+
+Use `requestId` received from send request along with the OTP code enterted by your user
 
 ```php
 <?php
