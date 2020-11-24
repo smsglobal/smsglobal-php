@@ -48,11 +48,71 @@ try {
 }
 ```
 
+**Send OTP**
+
+```php
+<?php
+
+require_once __DIR__ . '/vendor/autoload.php';
+
+// get your REST API keys from MXT https://mxt.smsglobal.com/integrations
+\SMSGlobal\Credentials::set('YOUR_API_KEY', 'YOUR_SECRET_KEY');
+
+$otp = new \SMSGlobal\Resource\Otp();
+
+try {
+    $response = $otp->send('DESTINATION_NUMBER', '{*code*} is your SMSGlobal verification code.');
+    print_r($response);
+} catch (\Exception $e) {
+    echo $e->getMessage();
+}
+```
+
+The following json response will be returned by the server:
+
+```json
+
+{
+    "requestId": "404372541683674336263499",
+    "validUnitlTimestamp": "2020-11-18 16:24:51",
+    "createdTimestamp": "2020-11-18 16:22:51",
+    "lastEventTimestamp": "2020-11-18 16:22:51",
+    "status": "Sent"
+}
+
+```
+
+
+**Verify OTP**
+
+Use `requestId` received from send request along with the OTP code enterted by your user
+
+```php
+<?php
+
+require_once __DIR__ . '/vendor/autoload.php';
+
+// get your REST API keys from MXT https://mxt.smsglobal.com/integrations
+\SMSGlobal\Credentials::set('YOUR_API_KEY', 'YOUR_SECRET_KEY');
+
+$otp = new \SMSGlobal\Resource\Otp();
+
+try {
+    $response = $otp->verfiyById('request Id', 'OTP code enterted by your user.');
+    print_r($response);
+} catch (\Exception $e) {
+    echo $e->getMessage();
+}
+```
+
+
 ### Available REST API Resources  
 
 * Sms
 * Sms Incoming
+* OTP
 * User
+
 
 ### Unit Tests
 Install development dependencies

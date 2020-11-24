@@ -20,6 +20,11 @@ use SMSGlobal\Exceptions\ResourceNotFoundException;
 class Base
 {
 
+
+    /** @var string Date format accepted by the server*/
+    const DATE_FORMAT = 'Y-m-d H:i:s';
+
+
     const CLIENT_VERSION = '1.0.4';
 
     /**
