@@ -85,7 +85,27 @@ The following json response will be returned by the server:
 
 **Verify OTP**
 
-Use `requestId` received from send request along with the OTP code enterted by your user
+The OTP code entered by your user can be verified by either `requestId` or `destination number`. Followings are examples of each method:
+
+```php
+
+<?php
+
+
+require_once __DIR__ . '/vendor/autoload.php';
+
+// get your REST API keys from MXT https://mxt.smsglobal.com/integrations
+\SMSGlobal\Credentials::set('YOUR_API_KEY', 'YOUR_SECRET_KEY');
+
+$otp = new \SMSGlobal\Resource\Otp();
+
+try {
+    $response = $otp->verfiyByRequestId('request Id', 'OTP code enterted by your user.');
+    print_r($response);
+} catch (\Exception $e) {
+    echo $e->getMessage();
+}
+```
 
 ```php
 <?php
@@ -98,7 +118,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 $otp = new \SMSGlobal\Resource\Otp();
 
 try {
-    $response = $otp->verfiyById('request Id', 'OTP code enterted by your user.');
+    $response = $otp->verfiyByDestination('destination number', 'OTP code enterted by your user.');
     print_r($response);
 } catch (\Exception $e) {
     echo $e->getMessage();
