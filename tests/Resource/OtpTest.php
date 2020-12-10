@@ -36,7 +36,7 @@ class OtpTest extends TestCase
         $this->assertInstanceOf(Otp::class, new Otp());
     }
 
-    public function testCancelByIdNotFound(): void
+    public function testCancelByRequestIdNotFound(): void
     {
         $this->expectException(ResourceNotFoundException::class);
 
@@ -48,7 +48,7 @@ class OtpTest extends TestCase
         $client = new Client(['handler' => $handlerStack]);
         try {
             $otp = new Otp($client);
-            $otp->cancelById('404372541682577504482079');
+            $otp->cancelByRequestId('404372541682577504482079');
         } catch (CredentialsException $e) {
             $this->fail('This test should not have failed');
         } catch (GuzzleException $e) {
@@ -58,84 +58,35 @@ class OtpTest extends TestCase
         }
     }
 
-    public function testCancelByIdFailedWithConflict(): void
+    public function testCancelByRequestId(): void
     {
-        $this->expectException(ClientException::class);
-
-        $responseBody = '{"error":"The input code has already been verified."}';
-
-        // Create a mock and queue two responses.
-        $mock = new MockHandler([
-            new Response(409, ['content-type' => 'application/json'], $responseBody),
-        ]);
-
-        $handlerStack = HandlerStack::create($mock);
-        $client = new Client(['handler' => $handlerStack,]);
-
-        try {
-            $otp = new Otp($client);
-            $response = $otp->cancelById('404372541682577504482079');
-        } catch (AuthenticationException $e) {
-            $this->fail('This test should not have failed');
-        } catch (ResourceNotFoundException $e) {
-            $this->fail('This test should not have failed');
-        } catch (CredentialsException $e) {
-            $this->fail('This test should not have failed');
-        }
-    }
-
-    public function testCancelById(): void
-    {
-        // Create a mock and queue two responses.
-        $mock = new MockHandler([
-            new Response(204),
-        ]);
-        $handlerStack = HandlerStack::create($mock);
-        $client = new Client(['handler' => $handlerStack]);
-
-        try {
-            $otp = new Otp($client);
-            $this->assertTrue($otp->cancelById('404372541682577504482079'));
-        } catch (GuzzleException $e) {
-            $this->fail('This test should not have failed');
-        } catch (AuthenticationException $e) {
-            $this->fail('This test should not have failed');
-        } catch (ResourceNotFoundException $e) {
-            $this->fail('This test should not have failed');
-        } catch (CredentialsException $e) {
-            $this->fail('This test should not have failed');
-        }
-    }
-
-    public function testGetById(): void
-    {
-        $responseBody = '{"requestId":"404372541682577504482079","validUnitlTimestamp":"2020-11-06 13:59:11","createdTimestamp":"2020-11-06 13:49:11","lastEventTimestamp":"2020-11-06 13:49:33","status":"Verified"}';
+        $responseBody = '{"requestId":"404372541682577504482079","destination": "61474950859", "validUnitlTimestamp":"2020-11-06 13:59:11","createdTimestamp":"2020-11-06 13:49:11","lastEventTimestamp":"2020-11-06 13:49:33","status":"Cancelled"}';
 
         // Create a mock and queue two responses.
         $mock = new MockHandler([
             new Response(200, ['content-type' => 'application/json'], $responseBody),
         ]);
+
         $handlerStack = HandlerStack::create($mock);
         $client = new Client(['handler' => $handlerStack]);
 
         try {
             $otp = new Otp($client);
-            $otpResponse = $otp->getById('404372541682577504482079');
+            $otpResponse = $otp->cancelByRequestId('404372541682577504482079');
             $this->assertEquals('404372541682577504482079', $otpResponse['requestId']);
+            $this->assertEquals('Cancelled', $otpResponse['status']);
         } catch (GuzzleException $e) {
-            $this->fail('This test should not have failed');
-        } catch (CredentialsException $e) {
             $this->fail('This test should not have failed');
         } catch (AuthenticationException $e) {
             $this->fail('This test should not have failed');
-        } catch (InvalidResponseException $e) {
-            $this->fail('This test should not have failed');
         } catch (ResourceNotFoundException $e) {
+            $this->fail('This test should not have failed');
+        } catch (CredentialsException $e) {
             $this->fail('This test should not have failed');
         }
     }
 
-    public function testGetByIdNotFound(): void
+    public function testCancelByDestinationNotFound(): void
     {
         $this->expectException(ResourceNotFoundException::class);
 
@@ -145,24 +96,49 @@ class OtpTest extends TestCase
         ]);
         $handlerStack = HandlerStack::create($mock);
         $client = new Client(['handler' => $handlerStack]);
-
         try {
             $otp = new Otp($client);
-            $otp->getById('404372541682577504482079');
+            $otp->cancelByDestination('404372541682577504482079');
         } catch (CredentialsException $e) {
             $this->fail('This test should not have failed');
         } catch (GuzzleException $e) {
             $this->fail('This test should not have failed');
         } catch (AuthenticationException $e) {
             $this->fail('This test should not have failed');
-        } catch (InvalidResponseException $e) {
+        }
+    }
+
+    public function testCancelByDestination(): void
+    {
+        $responseBody = '{"requestId":"404372541682577504482079","destination": "61474950859", "validUnitlTimestamp":"2020-11-06 13:59:11","createdTimestamp":"2020-11-06 13:49:11","lastEventTimestamp":"2020-11-06 13:49:33","status":"Cancelled"}';
+
+        // Create a mock and queue two responses.
+        $mock = new MockHandler([
+            new Response(200, ['content-type' => 'application/json'], $responseBody),
+        ]);
+
+        $handlerStack = HandlerStack::create($mock);
+        $client = new Client(['handler' => $handlerStack]);
+
+        try {
+            $otp = new Otp($client);
+            $otpResponse = $otp->cancelByDestination('61474950859');
+            $this->assertEquals('61474950859', $otpResponse['destination']);
+            $this->assertEquals('Cancelled', $otpResponse['status']);
+        } catch (GuzzleException $e) {
+            $this->fail('This test should not have failed');
+        } catch (AuthenticationException $e) {
+            $this->fail('This test should not have failed');
+        } catch (ResourceNotFoundException $e) {
+            $this->fail('This test should not have failed');
+        } catch (CredentialsException $e) {
             $this->fail('This test should not have failed');
         }
     }
 
     public function testSend(): void
     {
-        $responseBody = '{"requestId":"404372541682577504482079","validUnitlTimestamp":"2020-11-06 13:59:11","createdTimestamp":"2020-11-06 13:49:11","lastEventTimestamp":"2020-11-06 13:49:33","status":"Sent"}';
+        $responseBody = '{"requestId":"404372541682577504482079","destination": "61474950859", "validUnitlTimestamp":"2020-11-06 13:59:11","createdTimestamp":"2020-11-06 13:49:11","lastEventTimestamp":"2020-11-06 13:49:33","status":"Sent"}';
 
         // Create a mock and queue two responses.
         $mock = new MockHandler([
@@ -175,6 +151,8 @@ class OtpTest extends TestCase
             $otp = new Otp($client);
             $otpResponse = $otp->send('destination', '{*code*} is your SMSGlobal verification code.');
             $this->assertEquals('404372541682577504482079', $otpResponse['requestId']);
+            $this->assertEquals('61474950859', $otpResponse['destination']);
+            $this->assertEquals('Sent', $otpResponse['status']);
         } catch (GuzzleException $e) {
             $this->fail('This test should not have failed');
         } catch (AuthenticationException $e) {
@@ -192,7 +170,7 @@ class OtpTest extends TestCase
 
     public function testSendWithAllArguments()
     {
-        $responseBody = '{"requestId":"404372541682577504482079","validUnitlTimestamp":"2020-11-06 13:59:11","createdTimestamp":"2020-11-06 13:49:11","lastEventTimestamp":"2020-11-06 13:49:33","status":"Sent"}';
+        $responseBody = '{"requestId":"404372541682577504482079","destination": "61474950859", "validUnitlTimestamp":"2020-11-06 13:59:11","createdTimestamp":"2020-11-06 13:49:11","lastEventTimestamp":"2020-11-06 13:49:33","status":"Sent"}';
 
         // Create a mock and queue two responses.
         $mock = new MockHandler([
@@ -225,7 +203,7 @@ class OtpTest extends TestCase
 
     public function testSendRawPayload(): void
     {
-        $responseBody = '{"requestId":"404372541682577504482079","validUnitlTimestamp":"2020-11-06 13:59:11","createdTimestamp":"2020-11-06 13:49:11","lastEventTimestamp":"2020-11-06 13:49:33","status":"Sent"}';
+        $responseBody = '{"requestId":"404372541682577504482079","destination": "61474950859", "validUnitlTimestamp":"2020-11-06 13:59:11","createdTimestamp":"2020-11-06 13:49:11","lastEventTimestamp":"2020-11-06 13:49:33","status":"Sent"}';
 
         // Create a mock and queue two responses.
         $mock = new MockHandler([
@@ -309,7 +287,7 @@ class OtpTest extends TestCase
         }
     }
 
-    public function testVerfiyByIdNotFound(): void
+    public function testVerfiyByRequestIdNotFound(): void
     {
         $this->expectException(ResourceNotFoundException::class);
 
@@ -322,7 +300,7 @@ class OtpTest extends TestCase
 
         try {
             $otp = new Otp($client);
-            $otp->verfiyById('404372541682577504482079', '432423');
+            $otp->verfiyByRequestId('404372541682577504482079', '432423');
         } catch (CredentialsException $e) {
             $this->fail('This test should not have failed');
         } catch (GuzzleException $e) {
@@ -334,46 +312,23 @@ class OtpTest extends TestCase
         }
     }
 
-    public function testVerfiyByIdFailedWithConflict(): void
+    public function testVerifiedByRequestId()
     {
-        $this->expectException(ClientException::class);
-
-        $responseBody = '{"error":"The input code has already been verified."}';
+        $responseBody = '{"requestId":"404372541682577504482079","destination": "61474950859", "validUnitlTimestamp":"2020-11-06 13:59:11","createdTimestamp":"2020-11-06 13:49:11","lastEventTimestamp":"2020-11-06 13:49:33","status":"Verified"}';
 
         // Create a mock and queue two responses.
         $mock = new MockHandler([
-            new Response(409, ['content-type' => 'application/json'], $responseBody),
-        ]);
-
-        $handlerStack = HandlerStack::create($mock);
-        $client = new Client(['handler' => $handlerStack]);
-
-        try {
-            $otp = new Otp($client);
-            $otpResponse = $otp->verfiyById('404372541682577504482079', '423343');
-        } catch (CredentialsException $e) {
-            $this->fail('This test should not have failed');
-        } catch (AuthenticationException $e) {
-            $this->fail('This test should not have failed');
-        } catch (InvalidResponseException $e) {
-            $this->fail('This test should not have failed');
-        } catch (ResourceNotFoundException $e) {
-            $this->fail('This test should not have failed');
-        }
-    }
-
-    public function testVerifiedById()
-    {
-        // Create a mock and queue two responses.
-        $mock = new MockHandler([
-            new Response(204, ['content-type' => 'application/json']),
+            new Response(200, ['content-type' => 'application/json'], $responseBody),
         ]);
         $handlerStack = HandlerStack::create($mock);
         $client = new Client(['handler' => $handlerStack]);
 
         try {
             $otp = new Otp($client);
-            $this->assertTrue($otp->verfiyById('404372541682577504482079', '42112'));
+            $otpResponse = $otp->verfiyByRequestId('404372541682577504482079', '42112');
+            $this->assertEquals('404372541682577504482079', $otpResponse['requestId']);
+            $this->assertEquals('Verified', $otpResponse['status']);
+            $this->assertEquals('61474950859', $otpResponse['destination']);
         } catch (GuzzleException $e) {
             $this->fail('This test should not have failed');
         } catch (CredentialsException $e) {
@@ -387,14 +342,14 @@ class OtpTest extends TestCase
         }
     }
 
-    public function testVerifiedByIdWithMalformedCode(): void
+    public function testVerifiedByRequestIdWithMalformedCode(): void
     {
         $this->expectException(InvalidPayloadException::class);
 
         try {
             $otp = new Otp();
             // failing with using non UTF8 text.
-            $this->assertTrue($otp->verfiyById('404372541682577504482079', utf8_decode("ü")));
+            $otp->verfiyByRequestId('404372541682577504482079', utf8_decode("ü"));
         } catch (ResourceNotFoundException $e) {
             $this->fail('This test should not have failed');
         } catch (CredentialsException $e) {
@@ -404,6 +359,60 @@ class OtpTest extends TestCase
         } catch (AuthenticationException $e) {
             $this->fail('This test should not have failed');
         } catch (InvalidResponseException $e) {
+            $this->fail('This test should not have failed');
+        }
+    }
+
+    public function testVerfiyByDestinationNotFound(): void
+    {
+        $this->expectException(ResourceNotFoundException::class);
+
+        // Create a mock and queue two responses.
+        $mock = new MockHandler([
+            new Response(404),
+        ]);
+        $handlerStack = HandlerStack::create($mock);
+        $client = new Client(['handler' => $handlerStack]);
+
+        try {
+            $otp = new Otp($client);
+            $otp->verfiyByDestination('0474950859', '432423');
+        } catch (CredentialsException $e) {
+            $this->fail('This test should not have failed');
+        } catch (GuzzleException $e) {
+            $this->fail('This test should not have failed');
+        } catch (AuthenticationException $e) {
+            $this->fail('This test should not have failed');
+        } catch (InvalidResponseException $e) {
+            $this->fail('This test should not have failed');
+        }
+    }
+
+    public function testVerifiedByDestination()
+    {
+        $responseBody = '{"requestId":"404372541682577504482079","destination": "61474950859", "validUnitlTimestamp":"2020-11-06 13:59:11","createdTimestamp":"2020-11-06 13:49:11","lastEventTimestamp":"2020-11-06 13:49:33","status":"Verified"}';
+
+        // Create a mock and queue two responses.
+        $mock = new MockHandler([
+            new Response(200, ['content-type' => 'application/json'], $responseBody),
+        ]);
+        $handlerStack = HandlerStack::create($mock);
+        $client = new Client(['handler' => $handlerStack]);
+
+        try {
+            $otp = new Otp($client);
+            $otpResponse = $otp->verfiyByDestination('404372541682577504482079', '42112');
+            $this->assertEquals('Verified', $otpResponse['status']);
+            $this->assertEquals('61474950859', $otpResponse['destination']);
+        } catch (GuzzleException $e) {
+            $this->fail('This test should not have failed');
+        } catch (CredentialsException $e) {
+            $this->fail('This test should not have failed');
+        } catch (AuthenticationException $e) {
+            $this->fail('This test should not have failed');
+        } catch (InvalidResponseException $e) {
+            $this->fail('This test should not have failed');
+        } catch (ResourceNotFoundException $e) {
             $this->fail('This test should not have failed');
         }
     }
