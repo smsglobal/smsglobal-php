@@ -52,22 +52,58 @@ class Otp extends Base
     }
 
     /**
-     * @param string $requestId
+     * Verify an OTP code entered by your customer using request ID received upon sending an OTP
+     *
+     * @param string $requestId Request ID
+     * @param string $code      OTP code
+     *
+     * @return array
+     * @throws AuthenticationException
+     * @throws InvalidPayloadException
+     * @throws ResourceNotFoundException
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function verfiyByRequestId(string $requestId, string $code)
+    {
+        $uri = $this->prepareApiUri($this->resourceUri . '/requestid/' . $requestId . '/validate');
+
+        return $this->verify($uri, $code);
+    }
+
+    /**
+     * Verify an OTP code entered by your customer using destination number
+     *
+     * @param string $destination Destination number
      * @param string $code
      *
-     * @return bool|array Returns true if OTP input code is verified successfully otherwise error message
+     * @return array
      * @throws AuthenticationException
      * @throws InvalidPayloadException
      * @throws InvalidResponseException
      * @throws ResourceNotFoundException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function verfiyById(string $requestId, string $code)
+    public function verfiyByDestination(string $destination, string $code)
     {
-        $origin = !empty($from) ? $from : '';
+        $uri = $this->prepareApiUri($this->resourceUri . '/' . $destination . '/validate');
 
-        $uri = $this->prepareApiUri($this->resourceUri . '/' . $requestId);
+        return $this->verify($uri, $code);
+    }
 
+    /**
+     *
+     * @param string $uri  Request path
+     * @param string $code OTP code
+     *
+     * @return array
+     * @throws AuthenticationException
+     * @throws InvalidPayloadException
+     * @throws InvalidResponseException
+     * @throws ResourceNotFoundException
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    private function verify($uri, $code)
+    {
         $jsonPayload = json_encode(compact('code'), JSON_FORCE_OBJECT);
 
         if (!$jsonPayload) {
@@ -83,10 +119,12 @@ class Otp extends Base
             ],
         ]);
 
-        return $this->lastResponse->getStatusCode() === 204;
+        return $this->getJsonDecode($this->lastResponse->getBody()->getContents());
     }
 
     /**
+     * Cancel an OTP request using request ID received upon sending an OTP
+     *
      * @param string $requestId
      *
      * @return array
@@ -95,43 +133,51 @@ class Otp extends Base
      * @throws ResourceNotFoundException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getById(string $requestId): array
+    public function cancelByRequestId(string $requestId)
     {
-        $uri = $this->prepareApiUri($this->resourceUri . '/' . $requestId);
+        $uri = $this->prepareApiUri($this->resourceUri . '/requestid/' . $requestId . '/cancel');
 
-        $this->lastResponse = $this->doCall('GET', $this->host . $uri, [
+        return $this->cancel($uri);
+    }
+
+    /**
+     * Cancel an OTP request using destination number
+     *
+     * @param string $destination Destination number
+     *
+     * @return array
+     * @throws AuthenticationException
+     * @throws InvalidResponseException
+     * @throws ResourceNotFoundException
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function cancelByDestination($destination)
+    {
+        $uri = $this->prepareApiUri($this->resourceUri . '/' . $destination . '/cancel');
+
+        return $this->cancel($uri);
+    }
+
+    /**
+     * @param string $uri Request path
+     *
+     * @return array
+     * @throws AuthenticationException
+     * @throws InvalidResponseException
+     * @throws ResourceNotFoundException
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    private function cancel($uri)
+    {
+        $this->lastResponse = $this->doCall('POST', $this->host . $uri, [
             'headers' => [
-                'Authorization' => $this->credentials->getAuthorizationHeader('GET', $uri, $this->domain),
+                'Authorization' => $this->credentials->getAuthorizationHeader('POST', $uri, $this->domain),
                 'user-agent' => $this->userAgent,
                 'content-type' => 'application/json',
             ],
         ]);
 
         return $this->getJsonDecode($this->lastResponse->getBody()->getContents());
-    }
-
-    /**
-     * @param string $requestId
-     *
-     * @return bool|array Returns true if OTP cancelled successfully otherwise error message
-     * @throws AuthenticationException
-     * @throws InvalidResponseException
-     * @throws ResourceNotFoundException
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    public function cancelById(string $requestId)
-    {
-        $uri = $this->prepareApiUri($this->resourceUri . '/' . $requestId . '/cancel');
-
-        $this->lastResponse = $this->doCall('PUT', $this->host . $uri, [
-            'headers' => [
-                'Authorization' => $this->credentials->getAuthorizationHeader('PUT', $uri, $this->domain),
-                'user-agent' => $this->userAgent,
-                'content-type' => 'application/json',
-            ],
-        ]);
-
-        return $this->lastResponse->getStatusCode() === 204;
     }
 
     /**
