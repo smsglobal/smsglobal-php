@@ -85,7 +85,7 @@ The following json response will be returned by the server:
 
 **Verify OTP**
 
-The OTP code entered by your user can be verified by either using `requestId` or `destination number`. Followings are examples of each method:
+The OTP code entered by your user can be verified by either using `requestId` or `destination number`. The followings are examples of each method:
 
 ```php
 
@@ -127,7 +127,7 @@ try {
 
 **Cancel OTP**
 
-The OTP request can be cancelled if an OTP is not expired and verified yet. It can be done by either using `requestId` or `destination number`. Followings are examples of each method:
+The OTP request can be cancelled if an OTP is not expired and verified yet. It can be done by either using `requestId` or `destination number`. The followings are examples of each method:
 
 ```php
 
