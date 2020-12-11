@@ -300,7 +300,7 @@ class OtpTest extends TestCase
 
         try {
             $otp = new Otp($client);
-            $otp->verfiyByRequestId('404372541682577504482079', '432423');
+            $otp->verifyByRequestId('404372541682577504482079', '432423');
         } catch (CredentialsException $e) {
             $this->fail('This test should not have failed');
         } catch (GuzzleException $e) {
@@ -325,7 +325,7 @@ class OtpTest extends TestCase
 
         try {
             $otp = new Otp($client);
-            $otpResponse = $otp->verfiyByRequestId('404372541682577504482079', '42112');
+            $otpResponse = $otp->verifyByRequestId('404372541682577504482079', '42112');
             $this->assertEquals('404372541682577504482079', $otpResponse['requestId']);
             $this->assertEquals('Verified', $otpResponse['status']);
             $this->assertEquals('61474950888', $otpResponse['destination']);
@@ -376,7 +376,7 @@ class OtpTest extends TestCase
 
         try {
             $otp = new Otp($client);
-            $otp->verfiyByDestination('61474950888', '432423');
+            $otp->verifyByDestination('61474950888', '432423');
         } catch (CredentialsException $e) {
             $this->fail('This test should not have failed');
         } catch (GuzzleException $e) {
@@ -401,7 +401,7 @@ class OtpTest extends TestCase
 
         try {
             $otp = new Otp($client);
-            $otpResponse = $otp->verfiyByDestination('404372541682577504482079', '42112');
+            $otpResponse = $otp->verifyByDestination('404372541682577504482079', '42112');
             $this->assertEquals('Verified', $otpResponse['status']);
             $this->assertEquals('61474950888', $otpResponse['destination']);
         } catch (GuzzleException $e) {
