@@ -349,7 +349,7 @@ class OtpTest extends TestCase
         try {
             $otp = new Otp();
             // failing with using non UTF8 text.
-            $otp->verfiyByRequestId('404372541682577504482079', utf8_decode("ü"));
+            $otp->verifyByRequestId('404372541682577504482079', utf8_decode("ü"));
         } catch (ResourceNotFoundException $e) {
             $this->fail('This test should not have failed');
         } catch (CredentialsException $e) {
