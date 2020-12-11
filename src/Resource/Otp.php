@@ -63,7 +63,7 @@ class Otp extends Base
      * @throws ResourceNotFoundException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function verfiyByRequestId(string $requestId, string $code)
+    public function verifyByRequestId(string $requestId, string $code)
     {
         $uri = $this->prepareApiUri($this->resourceUri . '/requestid/' . $requestId . '/validate');
 
@@ -83,7 +83,7 @@ class Otp extends Base
      * @throws ResourceNotFoundException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function verfiyByDestination(string $destination, string $code)
+    public function verifyByDestination(string $destination, string $code)
     {
         $uri = $this->prepareApiUri($this->resourceUri . '/' . $destination . '/validate');
 

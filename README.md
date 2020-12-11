@@ -77,7 +77,7 @@ The following json response will be returned by the server:
     "validUnitlTimestamp": "2020-11-18 16:24:51",
     "createdTimestamp": "2020-11-18 16:22:51",
     "lastEventTimestamp": "2020-11-18 16:22:51",
-    "destination": "61474950888",
+    "destination": "61400000000",
     "status": "Sent"
 }
 
@@ -101,7 +101,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 $otp = new \SMSGlobal\Resource\Otp();
 
 try {
-    $response = $otp->verfiyByRequestId('request Id', 'OTP code enterted by your user.');
+    $response = $otp->verifyByRequestId('request Id', 'OTP code enterted by your user.');
     print_r($response);
 } catch (\Exception $e) {
     echo $e->getMessage();
@@ -119,7 +119,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 $otp = new \SMSGlobal\Resource\Otp();
 
 try {
-    $response = $otp->verfiyByDestination('destination number', 'OTP code enterted by your user.');
+    $response = $otp->verifyByDestination('destination number', 'OTP code enterted by your user.');
     print_r($response);
 } catch (\Exception $e) {
     echo $e->getMessage();
@@ -135,7 +135,7 @@ The following json response will be returned by the server if verification is su
     "validUnitlTimestamp": "2020-11-18 16:24:51",
     "createdTimestamp": "2020-11-18 16:22:51",
     "lastEventTimestamp": "2020-11-18 16:22:51",
-    "destination": "61474950888",
+    "destination": "61400000000",
     "status": "Verified"
 }
 
@@ -190,7 +190,7 @@ The following json response will be returned by the server if cancellation is su
     "validUnitlTimestamp": "2020-11-18 16:24:51",
     "createdTimestamp": "2020-11-18 16:22:51",
     "lastEventTimestamp": "2020-11-18 16:22:51",
-    "destination": "61474950888",
+    "destination": "61400000000",
     "status": "Cancelled"
 }
 
