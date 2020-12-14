@@ -77,6 +77,7 @@ The following json response will be returned by the server:
     "validUnitlTimestamp": "2020-11-18 16:24:51",
     "createdTimestamp": "2020-11-18 16:22:51",
     "lastEventTimestamp": "2020-11-18 16:22:51",
+    "destination": "61400000000",
     "status": "Sent"
 }
 
@@ -85,7 +86,27 @@ The following json response will be returned by the server:
 
 **Verify OTP**
 
-Use `requestId` received from send request along with the OTP code enterted by your user
+The OTP code entered by your user can be verified by either using `requestId` or `destination number`. The followings are examples of each method:
+
+```php
+
+<?php
+
+
+require_once __DIR__ . '/vendor/autoload.php';
+
+// get your REST API keys from MXT https://mxt.smsglobal.com/integrations
+\SMSGlobal\Credentials::set('YOUR_API_KEY', 'YOUR_SECRET_KEY');
+
+$otp = new \SMSGlobal\Resource\Otp();
+
+try {
+    $response = $otp->verifyByRequestId('request Id', 'OTP code enterted by your user.');
+    print_r($response);
+} catch (\Exception $e) {
+    echo $e->getMessage();
+}
+```
 
 ```php
 <?php
@@ -98,11 +119,81 @@ require_once __DIR__ . '/vendor/autoload.php';
 $otp = new \SMSGlobal\Resource\Otp();
 
 try {
-    $response = $otp->verfiyById('request Id', 'OTP code enterted by your user.');
+    $response = $otp->verifyByDestination('destination number', 'OTP code enterted by your user.');
     print_r($response);
 } catch (\Exception $e) {
     echo $e->getMessage();
 }
+```
+
+The following json response will be returned by the server if verification is successfull:
+
+```json
+
+{
+    "requestId": "404372541683674336263499",
+    "validUnitlTimestamp": "2020-11-18 16:24:51",
+    "createdTimestamp": "2020-11-18 16:22:51",
+    "lastEventTimestamp": "2020-11-18 16:22:51",
+    "destination": "61400000000",
+    "status": "Verified"
+}
+
+```
+
+**Cancel OTP**
+
+The OTP request can be cancelled if an OTP is not expired and verified yet. It can be done by either using `requestId` or `destination number`. The followings are examples of each method:
+
+```php
+
+require_once __DIR__ . '/vendor/autoload.php';
+
+// get your REST API keys from MXT https://mxt.smsglobal.com/integrations
+\SMSGlobal\Credentials::set('YOUR_API_KEY', 'YOUR_SECRET_KEY');
+
+$otp = new \SMSGlobal\Resource\Otp();
+
+try {
+    $response = $otp->cancelByRequestId('request Id');
+    print_r($response);
+} catch (\Exception $e) {
+    echo $e->getMessage();
+}
+```
+
+
+```php
+
+require_once __DIR__ . '/vendor/autoload.php';
+
+// get your REST API keys from MXT https://mxt.smsglobal.com/integrations
+\SMSGlobal\Credentials::set('YOUR_API_KEY', 'YOUR_SECRET_KEY');
+
+$otp = new \SMSGlobal\Resource\Otp();
+
+try {
+    $response = $otp->cancelByDestination('destination number');
+    print_r($response);
+} catch (\Exception $e) {
+    echo $e->getMessage();
+}
+```
+
+
+The following json response will be returned by the server if cancellation is successfull:
+
+```json
+
+{
+    "requestId": "404372541683674336263499",
+    "validUnitlTimestamp": "2020-11-18 16:24:51",
+    "createdTimestamp": "2020-11-18 16:22:51",
+    "lastEventTimestamp": "2020-11-18 16:22:51",
+    "destination": "61400000000",
+    "status": "Cancelled"
+}
+
 ```
 
 
