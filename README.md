@@ -201,7 +201,7 @@ The following json response will be returned by the server if cancellation is su
 
 * Sms
 * Sms Incoming
-* OTP
+* OTP (beta)
 * User
 
 
