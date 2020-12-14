@@ -60,7 +60,7 @@ class OtpTest extends TestCase
 
     public function testCancelByRequestId(): void
     {
-        $responseBody = '{"requestId":"404372541682577504482079","destination": "61474950888", "validUnitlTimestamp":"2020-11-06 13:59:11","createdTimestamp":"2020-11-06 13:49:11","lastEventTimestamp":"2020-11-06 13:49:33","status":"Cancelled"}';
+        $responseBody = '{"requestId":"404372541682577504482079","destination": "61400000000", "validUnitlTimestamp":"2020-11-06 13:59:11","createdTimestamp":"2020-11-06 13:49:11","lastEventTimestamp":"2020-11-06 13:49:33","status":"Cancelled"}';
 
         // Create a mock and queue two responses.
         $mock = new MockHandler([
@@ -110,7 +110,7 @@ class OtpTest extends TestCase
 
     public function testCancelByDestination(): void
     {
-        $responseBody = '{"requestId":"404372541682577504482079","destination": "61474950888", "validUnitlTimestamp":"2020-11-06 13:59:11","createdTimestamp":"2020-11-06 13:49:11","lastEventTimestamp":"2020-11-06 13:49:33","status":"Cancelled"}';
+        $responseBody = '{"requestId":"404372541682577504482079","destination": "61400000000", "validUnitlTimestamp":"2020-11-06 13:59:11","createdTimestamp":"2020-11-06 13:49:11","lastEventTimestamp":"2020-11-06 13:49:33","status":"Cancelled"}';
 
         // Create a mock and queue two responses.
         $mock = new MockHandler([
@@ -122,8 +122,8 @@ class OtpTest extends TestCase
 
         try {
             $otp = new Otp($client);
-            $otpResponse = $otp->cancelByDestination('61474950888');
-            $this->assertEquals('61474950888', $otpResponse['destination']);
+            $otpResponse = $otp->cancelByDestination('61400000000');
+            $this->assertEquals('61400000000', $otpResponse['destination']);
             $this->assertEquals('Cancelled', $otpResponse['status']);
         } catch (GuzzleException $e) {
             $this->fail('This test should not have failed');
@@ -138,7 +138,7 @@ class OtpTest extends TestCase
 
     public function testSend(): void
     {
-        $responseBody = '{"requestId":"404372541682577504482079","destination": "61474950888", "validUnitlTimestamp":"2020-11-06 13:59:11","createdTimestamp":"2020-11-06 13:49:11","lastEventTimestamp":"2020-11-06 13:49:33","status":"Sent"}';
+        $responseBody = '{"requestId":"404372541682577504482079","destination": "61400000000", "validUnitlTimestamp":"2020-11-06 13:59:11","createdTimestamp":"2020-11-06 13:49:11","lastEventTimestamp":"2020-11-06 13:49:33","status":"Sent"}';
 
         // Create a mock and queue two responses.
         $mock = new MockHandler([
@@ -151,7 +151,7 @@ class OtpTest extends TestCase
             $otp = new Otp($client);
             $otpResponse = $otp->send('destination', '{*code*} is your SMSGlobal verification code.');
             $this->assertEquals('404372541682577504482079', $otpResponse['requestId']);
-            $this->assertEquals('61474950888', $otpResponse['destination']);
+            $this->assertEquals('61400000000', $otpResponse['destination']);
             $this->assertEquals('Sent', $otpResponse['status']);
         } catch (GuzzleException $e) {
             $this->fail('This test should not have failed');
@@ -170,7 +170,7 @@ class OtpTest extends TestCase
 
     public function testSendWithAllArguments()
     {
-        $responseBody = '{"requestId":"404372541682577504482079","destination": "61474950888", "validUnitlTimestamp":"2020-11-06 13:59:11","createdTimestamp":"2020-11-06 13:49:11","lastEventTimestamp":"2020-11-06 13:49:33","status":"Sent"}';
+        $responseBody = '{"requestId":"404372541682577504482079","destination": "61400000000", "validUnitlTimestamp":"2020-11-06 13:59:11","createdTimestamp":"2020-11-06 13:49:11","lastEventTimestamp":"2020-11-06 13:49:33","status":"Sent"}';
 
         // Create a mock and queue two responses.
         $mock = new MockHandler([
@@ -203,7 +203,7 @@ class OtpTest extends TestCase
 
     public function testSendRawPayload(): void
     {
-        $responseBody = '{"requestId":"404372541682577504482079","destination": "61474950888", "validUnitlTimestamp":"2020-11-06 13:59:11","createdTimestamp":"2020-11-06 13:49:11","lastEventTimestamp":"2020-11-06 13:49:33","status":"Sent"}';
+        $responseBody = '{"requestId":"404372541682577504482079","destination": "61400000000", "validUnitlTimestamp":"2020-11-06 13:59:11","createdTimestamp":"2020-11-06 13:49:11","lastEventTimestamp":"2020-11-06 13:49:33","status":"Sent"}';
 
         // Create a mock and queue two responses.
         $mock = new MockHandler([
@@ -314,7 +314,7 @@ class OtpTest extends TestCase
 
     public function testVerifiedByRequestId()
     {
-        $responseBody = '{"requestId":"404372541682577504482079","destination": "61474950888", "validUnitlTimestamp":"2020-11-06 13:59:11","createdTimestamp":"2020-11-06 13:49:11","lastEventTimestamp":"2020-11-06 13:49:33","status":"Verified"}';
+        $responseBody = '{"requestId":"404372541682577504482079","destination": "61400000000", "validUnitlTimestamp":"2020-11-06 13:59:11","createdTimestamp":"2020-11-06 13:49:11","lastEventTimestamp":"2020-11-06 13:49:33","status":"Verified"}';
 
         // Create a mock and queue two responses.
         $mock = new MockHandler([
@@ -328,7 +328,7 @@ class OtpTest extends TestCase
             $otpResponse = $otp->verifyByRequestId('404372541682577504482079', '42112');
             $this->assertEquals('404372541682577504482079', $otpResponse['requestId']);
             $this->assertEquals('Verified', $otpResponse['status']);
-            $this->assertEquals('61474950888', $otpResponse['destination']);
+            $this->assertEquals('61400000000', $otpResponse['destination']);
         } catch (GuzzleException $e) {
             $this->fail('This test should not have failed');
         } catch (CredentialsException $e) {
@@ -376,7 +376,7 @@ class OtpTest extends TestCase
 
         try {
             $otp = new Otp($client);
-            $otp->verifyByDestination('61474950888', '432423');
+            $otp->verifyByDestination('61400000000', '432423');
         } catch (CredentialsException $e) {
             $this->fail('This test should not have failed');
         } catch (GuzzleException $e) {
@@ -390,7 +390,7 @@ class OtpTest extends TestCase
 
     public function testVerifiedByDestination()
     {
-        $responseBody = '{"requestId":"404372541682577504482079","destination": "61474950888", "validUnitlTimestamp":"2020-11-06 13:59:11","createdTimestamp":"2020-11-06 13:49:11","lastEventTimestamp":"2020-11-06 13:49:33","status":"Verified"}';
+        $responseBody = '{"requestId":"404372541682577504482079","destination": "61400000000", "validUnitlTimestamp":"2020-11-06 13:59:11","createdTimestamp":"2020-11-06 13:49:11","lastEventTimestamp":"2020-11-06 13:49:33","status":"Verified"}';
 
         // Create a mock and queue two responses.
         $mock = new MockHandler([
@@ -403,7 +403,7 @@ class OtpTest extends TestCase
             $otp = new Otp($client);
             $otpResponse = $otp->verifyByDestination('404372541682577504482079', '42112');
             $this->assertEquals('Verified', $otpResponse['status']);
-            $this->assertEquals('61474950888', $otpResponse['destination']);
+            $this->assertEquals('61400000000', $otpResponse['destination']);
         } catch (GuzzleException $e) {
             $this->fail('This test should not have failed');
         } catch (CredentialsException $e) {
