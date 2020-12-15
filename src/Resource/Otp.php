@@ -11,7 +11,7 @@ use SMSGlobal\Exceptions\ResourceNotFoundException;
 /**
  * Class Otp
  *
- * This api is currently a beta release
+ * This api resource is currently a beta release
  * @package SMSGlobal\Resource
  */
 class Otp extends Base
