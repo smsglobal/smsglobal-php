@@ -10,6 +10,8 @@ use SMSGlobal\Exceptions\ResourceNotFoundException;
 
 /**
  * Class Otp
+ *
+ * This api is currently a beta release
  * @package SMSGlobal\Resource
  */
 class Otp extends Base
@@ -33,7 +35,9 @@ class Otp extends Base
      * @throws InvalidPayloadException
      * @throws InvalidResponseException
      * @throws ResourceNotFoundException
+     * @version beta
      */
+
     public function send(string $to, string $text, string $from = null, string $codeExpiry = null, string $length = null, \DateTime $messageExpiryDateTime = null): array
     {
         $origin = !empty($from) ? $from : '';
@@ -62,6 +66,7 @@ class Otp extends Base
      * @throws InvalidPayloadException
      * @throws ResourceNotFoundException
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @version beta
      */
     public function verifyByRequestId(string $requestId, string $code)
     {
@@ -82,6 +87,7 @@ class Otp extends Base
      * @throws InvalidResponseException
      * @throws ResourceNotFoundException
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @version beta
      */
     public function verifyByDestination(string $destination, string $code)
     {
@@ -101,6 +107,7 @@ class Otp extends Base
      * @throws InvalidResponseException
      * @throws ResourceNotFoundException
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @version beta
      */
     private function verify($uri, $code)
     {
@@ -132,6 +139,7 @@ class Otp extends Base
      * @throws InvalidResponseException
      * @throws ResourceNotFoundException
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @version beta
      */
     public function cancelByRequestId(string $requestId)
     {
@@ -150,6 +158,7 @@ class Otp extends Base
      * @throws InvalidResponseException
      * @throws ResourceNotFoundException
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @version beta
      */
     public function cancelByDestination($destination)
     {
@@ -166,6 +175,7 @@ class Otp extends Base
      * @throws InvalidResponseException
      * @throws ResourceNotFoundException
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @version beta
      */
     private function cancel($uri)
     {
@@ -192,6 +202,7 @@ class Otp extends Base
      * @throws InvalidPayloadException
      * @throws InvalidResponseException
      * @throws ResourceNotFoundException
+     * @version beta
      */
     public function rawPayload(array $payload)
     {
