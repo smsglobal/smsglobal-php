@@ -58,7 +58,7 @@ class Sms extends Base
         $origin = !empty($from) ? $from : '';
 
         return $this->rawPayload([
-            "destinations" => json_encode($to),
+            "destinations" => $to,
             "message" => $text,
             "origin" => $origin
         ]);
