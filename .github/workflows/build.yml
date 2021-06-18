@@ -11,43 +11,46 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    matrix:
-      php-version:
-        - "8.0"
+    strategy:
+      matrix:
+        php-version:
+          - "8.0"
+        coverage-driver:
+          - "xdebug"
 
     steps:
-    - name: Checkout
-    - uses: actions/checkout@v2
+      - name: Checkout
+      - uses: actions/checkout@v2
 
-    - name: Install PHP
-      uses: "shivammathur/setup-php@v2"
-      with:
-        php-version: "${{ matrix.php-version }}"
-        coverage: "xdebug"
+      - name: Install PHP
+        uses: "shivammathur/setup-php@v2"
+        with:
+          php-version: "${{ matrix.php-version }}"
+          coverage: "${{ matrix.coverage-driver }}"
 
-    - name: Validate composer.json and composer.lock
-      run: composer validate
+      - name: Validate composer.json and composer.lock
+        run: composer validate
 
-    - name: Cache Composer packages
-      id: composer-cache
-      uses: actions/cache@v2
-      with:
-        path: vendor
-        key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-php-
+      - name: Cache Composer packages
+        id: composer-cache
+        uses: actions/cache@v2
+        with:
+          path: vendor
+          key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-php-
 
-    - name: Install dependencies
-      if: steps.composer-cache.outputs.cache-hit != 'true'
-      run: composer install --prefer-dist --no-progress --no-suggest
+      - name: Install dependencies
+        if: steps.composer-cache.outputs.cache-hit != 'true'
+        run: composer install --prefer-dist --no-progress --no-suggest
 
-    - name: test
-      run: ./vendor/bin/phpunit tests
-      
-    - name: Codecov Coverage Report
-      uses: codecov/codecov-action@v1
-      with: 
-        token: ${{ secrets.CODECOV_TOKEN }}
-        file: ./clover.xml
-        flags: unittests
-        fail_ci_if_error: true
+      - name: test
+        run: ./vendor/bin/phpunit tests
+
+      - name: Codecov Coverage Report
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./clover.xml
+          flags: unittests
+          fail_ci_if_error: true
