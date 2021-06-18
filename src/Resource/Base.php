@@ -11,6 +11,7 @@ use SMSGlobal\Exceptions\AuthenticationException;
 use SMSGlobal\Exceptions\CredentialsException;
 use SMSGlobal\Exceptions\InvalidPayloadException;
 use SMSGlobal\Exceptions\InvalidResponseException;
+use SMSGlobal\Exceptions\PaymentRequiredException;
 use SMSGlobal\Exceptions\ResourceNotFoundException;
 
 /**
