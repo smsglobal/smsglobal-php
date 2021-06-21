@@ -13,8 +13,8 @@ Sign up for a [free SMSGlobal account](https://www.smsglobal.com/mxt-sign-up/?ut
 
 ### Requirements
 
-* PHP 7.2 and above
-* Guzzle6 (PHP HTTP client)
+* PHP 7.3 and above
+* Guzzle7 (PHP HTTP client)
 
 ### Installation
 
