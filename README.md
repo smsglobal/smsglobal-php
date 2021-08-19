@@ -41,7 +41,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 $sms = new \SMSGlobal\Resource\Sms();
 
 try {
-    $response = $sms->sendToOne('DESTINATION_NUMBER', 'This is a test message.');
+    $response = $sms->sendToOne('DESTINATION_NUMBER', 'This is a test message.', 'ORIGIN_OR_FROM_NUMBER');
     print_r($response['messages']);
 } catch (\Exception $e) {
     echo $e->getMessage();
@@ -61,7 +61,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 $otp = new \SMSGlobal\Resource\Otp();
 
 try {
-    $response = $otp->send('DESTINATION_NUMBER', '{*code*} is your SMSGlobal verification code.');
+    $response = $otp->send('DESTINATION_NUMBER', '{*code*} is your SMSGlobal verification code.', 'ORIGIN_OR_FROM_NUMBER');
     print_r($response);
 } catch (\Exception $e) {
     echo $e->getMessage();
