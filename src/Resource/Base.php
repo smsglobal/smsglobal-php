@@ -22,7 +22,7 @@ class Base
     /** @var string Date format accepted by the server */
     const string DATE_FORMAT = 'Y-m-d H:i:s';
 
-    const string CLIENT_VERSION = '1.0.4';
+    const string CLIENT_VERSION = '2.0.0';
 
     /**
      * @var Credentials|null
