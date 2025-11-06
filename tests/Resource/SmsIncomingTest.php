@@ -17,15 +17,14 @@ use SMSGlobal\Resource\SmsIncoming;
 
 class SmsIncomingTest extends TestCase
 {
+    protected Credentials $credentials;
 
-    protected $credentials;
-
-    protected $apiKey = 'key12345';
-    protected $apiSecret = 'secret12345';
+    protected string $apiKey = 'key12345';
+    protected string $apiSecret = 'secret12345';
 
     public function setUp(): void
     {
-        $this->credentials =  Credentials::set($this->apiKey, $this->apiSecret);
+        $this->credentials = Credentials::set($this->apiKey, $this->apiSecret);
     }
 
     public function testSmsIncomingInstance(): void
@@ -47,11 +46,7 @@ class SmsIncomingTest extends TestCase
         try {
             $smsIncoming = new SmsIncoming($client);
             $smsIncoming->deleteById('123');
-        } catch (CredentialsException $e) {
-            $this->fail('This test should not have failed');
-        } catch (GuzzleException $e) {
-            $this->fail('This test should not have failed');
-        } catch (AuthenticationException $e) {
+        } catch (CredentialsException|GuzzleException|AuthenticationException $e) {
             $this->fail('This test should not have failed');
         }
     }
@@ -68,13 +63,7 @@ class SmsIncomingTest extends TestCase
         try {
             $smsIncoming = new SmsIncoming($client);
             $this->assertTrue($smsIncoming->deleteById('123'));
-        } catch (ResourceNotFoundException $e) {
-            $this->fail('This test should not have failed');
-        } catch (CredentialsException $e) {
-            $this->fail('This test should not have failed');
-        } catch (GuzzleException $e) {
-            $this->fail('This test should not have failed');
-        } catch (AuthenticationException $e) {
+        } catch (\Throwable $e) {
             $this->fail('This test should not have failed');
         }
     }
@@ -97,15 +86,7 @@ class SmsIncomingTest extends TestCase
             $smsIncoming = new SmsIncoming($client);
             $smsResponse = $smsIncoming->getById('123');
             $this->assertEquals('123', $smsResponse['id']);
-        } catch (GuzzleException $e) {
-            $this->fail('This test should not have failed');
-        } catch (CredentialsException $e) {
-            $this->fail('This test should not have failed');
-        } catch (AuthenticationException $e) {
-            $this->fail('This test should not have failed');
-        } catch (InvalidResponseException $e) {
-            $this->fail('This test should not have failed');
-        } catch (ResourceNotFoundException $e) {
+        } catch (\Throwable $e) {
             $this->fail('This test should not have failed');
         }
     }
@@ -123,16 +104,9 @@ class SmsIncomingTest extends TestCase
 
         try {
             $smsIncoming = new SmsIncoming($client);
-            $smsResponse = $smsIncoming->getById('123');
-        } catch (CredentialsException $e) {
-            $this->fail('This test should not have failed');
-        } catch (GuzzleException $e) {
-            $this->fail('This test should not have failed');
-        } catch (AuthenticationException $e) {
-            $this->fail('This test should not have failed');
-        } catch (InvalidResponseException $e) {
+            $smsIncoming->getById('123');
+        } catch (CredentialsException|GuzzleException|AuthenticationException|InvalidResponseException $e) {
             $this->fail('This test should not have failed');
         }
     }
-
 }

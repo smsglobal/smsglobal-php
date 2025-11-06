@@ -14,14 +14,14 @@ use SMSGlobal\Exceptions\CredentialsException;
 use SMSGlobal\Exceptions\InvalidResponseException;
 use SMSGlobal\Exceptions\ResourceNotFoundException;
 use SMSGlobal\Resource\User;
+use Throwable;
 
 class UserTest extends TestCase
 {
+    protected Credentials $credentials;
 
-    protected $credentials;
-
-    protected $apiKey = 'key12345';
-    protected $apiSecret = 'secret12345';
+    protected string $apiKey = 'key12345';
+    protected string $apiSecret = 'secret12345';
 
     public function setUp(): void
     {
@@ -47,13 +47,7 @@ class UserTest extends TestCase
         try {
             $user = new User($client);
             $user->getBalance();
-        } catch (CredentialsException $e) {
-            $this->fail('This test should not have failed');
-        } catch (GuzzleException $e) {
-            $this->fail('This test should not have failed');
-        } catch (AuthenticationException $e) {
-            $this->fail('This test should not have failed');
-        } catch (InvalidResponseException $e) {
+        } catch (CredentialsException|GuzzleException|AuthenticationException|InvalidResponseException $e) {
             $this->fail('This test should not have failed');
         }
     }
@@ -74,15 +68,7 @@ class UserTest extends TestCase
             $response = $user->getBalance();
             $this->assertEquals('100', $response['balance']);
             $this->assertIsFloat($response['balance']);
-        } catch (GuzzleException $e) {
-            $this->fail('This test should not have failed');
-        } catch (AuthenticationException $e) {
-            $this->fail('This test should not have failed');
-        } catch (InvalidResponseException $e) {
-            $this->fail('This test should not have failed');
-        } catch (ResourceNotFoundException $e) {
-            $this->fail('This test should not have failed');
-        } catch (CredentialsException $e) {
+        } catch (Throwable $e) {
             $this->fail('This test should not have failed');
         }
     }
@@ -103,15 +89,8 @@ class UserTest extends TestCase
         try {
             $user = new User($client);
             $user->getBalance();
-        } catch (GuzzleException $e) {
-            $this->fail('This test should not have failed');
-        } catch (AuthenticationException $e) {
-            $this->fail('This test should not have failed');
-        } catch (ResourceNotFoundException $e) {
-            $this->fail('This test should not have failed');
-        } catch (CredentialsException $e) {
+        } catch (GuzzleException|AuthenticationException|ResourceNotFoundException|CredentialsException $e) {
             $this->fail('This test should not have failed');
         }
     }
-
 }

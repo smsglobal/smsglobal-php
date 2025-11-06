@@ -11,16 +11,18 @@
     },
     {
       "name": "SMSGlobal Dev Team",
-      "email": "developers@smsglobal.com"
+      "email": "developer@smsglobal.com"
     }
   ],
   "require": {
-    "php": ">=7.3",
-    "guzzlehttp/guzzle": "^7.2"
+    "php": ">=8.4",
+    "ext-json": "*",
+    "ext-openssl": "*",
+    "guzzlehttp/guzzle": "^7.9"
   },
   "require-dev": {
-    "phpunit/phpunit": ">=8.0",
-    "php-http/guzzle7-adapter": "^0.1.1"
+    "php-http/guzzle7-adapter": "^1.1",
+    "phpunit/phpunit": "^12.4"
   },
   "autoload": {
     "psr-4": {

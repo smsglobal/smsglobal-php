@@ -3,7 +3,6 @@
 namespace SMSGlobal\Tests\Resource;
 
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
@@ -16,15 +15,13 @@ use SMSGlobal\Exceptions\InvalidPayloadException;
 use SMSGlobal\Exceptions\InvalidResponseException;
 use SMSGlobal\Exceptions\ResourceNotFoundException;
 use SMSGlobal\Resource\Otp;
-use SMSGlobal\Resource\Sms;
 
 class OtpTest extends TestCase
 {
+    protected Credentials $credentials;
 
-    protected $credentials;
-
-    protected $apiKey = 'key12345';
-    protected $apiSecret = 'secret12345';
+    protected string $apiKey = 'key12345';
+    protected string $apiSecret = 'secret12345';
 
     public function setUp(): void
     {
@@ -49,11 +46,7 @@ class OtpTest extends TestCase
         try {
             $otp = new Otp($client);
             $otp->cancelByRequestId('404372541682577504482079');
-        } catch (CredentialsException $e) {
-            $this->fail('This test should not have failed');
-        } catch (GuzzleException $e) {
-            $this->fail('This test should not have failed');
-        } catch (AuthenticationException $e) {
+        } catch (CredentialsException|GuzzleException|AuthenticationException $e) {
             $this->fail('This test should not have failed');
         }
     }
@@ -75,13 +68,7 @@ class OtpTest extends TestCase
             $otpResponse = $otp->cancelByRequestId('404372541682577504482079');
             $this->assertEquals('404372541682577504482079', $otpResponse['requestId']);
             $this->assertEquals('Cancelled', $otpResponse['status']);
-        } catch (GuzzleException $e) {
-            $this->fail('This test should not have failed');
-        } catch (AuthenticationException $e) {
-            $this->fail('This test should not have failed');
-        } catch (ResourceNotFoundException $e) {
-            $this->fail('This test should not have failed');
-        } catch (CredentialsException $e) {
+        } catch (\Throwable $e) {
             $this->fail('This test should not have failed');
         }
     }
@@ -99,11 +86,7 @@ class OtpTest extends TestCase
         try {
             $otp = new Otp($client);
             $otp->cancelByDestination('404372541682577504482079');
-        } catch (CredentialsException $e) {
-            $this->fail('This test should not have failed');
-        } catch (GuzzleException $e) {
-            $this->fail('This test should not have failed');
-        } catch (AuthenticationException $e) {
+        } catch (CredentialsException|GuzzleException|AuthenticationException $e) {
             $this->fail('This test should not have failed');
         }
     }
@@ -125,13 +108,7 @@ class OtpTest extends TestCase
             $otpResponse = $otp->cancelByDestination('61400000000');
             $this->assertEquals('61400000000', $otpResponse['destination']);
             $this->assertEquals('Cancelled', $otpResponse['status']);
-        } catch (GuzzleException $e) {
-            $this->fail('This test should not have failed');
-        } catch (AuthenticationException $e) {
-            $this->fail('This test should not have failed');
-        } catch (ResourceNotFoundException $e) {
-            $this->fail('This test should not have failed');
-        } catch (CredentialsException $e) {
+        } catch (\Throwable $e) {
             $this->fail('This test should not have failed');
         }
     }
@@ -153,17 +130,7 @@ class OtpTest extends TestCase
             $this->assertEquals('404372541682577504482079', $otpResponse['requestId']);
             $this->assertEquals('61400000000', $otpResponse['destination']);
             $this->assertEquals('Sent', $otpResponse['status']);
-        } catch (GuzzleException $e) {
-            $this->fail('This test should not have failed');
-        } catch (AuthenticationException $e) {
-            $this->fail('This test should not have failed');
-        } catch (InvalidPayloadException $e) {
-            $this->fail('This test should not have failed');
-        } catch (InvalidResponseException $e) {
-            $this->fail('This test should not have failed');
-        } catch (ResourceNotFoundException $e) {
-            $this->fail('This test should not have failed');
-        } catch (CredentialsException $e) {
+        } catch (\Throwable $e) {
             $this->fail('This test should not have failed');
         }
     }
@@ -186,17 +153,7 @@ class OtpTest extends TestCase
             $otp = new Otp($client);
             $otpResponse = $otp->send('destination', '{*code*} is your SMSGlobal verification code.', 'SMSGlobal', 300, 4, $messageExpiry);
             $this->assertEquals('404372541682577504482079', $otpResponse['requestId']);
-        } catch (GuzzleException $e) {
-            $this->fail('This test should not have failed');
-        } catch (AuthenticationException $e) {
-            $this->fail('This test should not have failed');
-        } catch (InvalidPayloadException $e) {
-            $this->fail('This test should not have failed');
-        } catch (InvalidResponseException $e) {
-            $this->fail('This test should not have failed');
-        } catch (ResourceNotFoundException $e) {
-            $this->fail('This test should not have failed');
-        } catch (CredentialsException $e) {
+        } catch (\Throwable $e) {
             $this->fail('This test should not have failed');
         }
     }
@@ -219,17 +176,7 @@ class OtpTest extends TestCase
                 'message' => 'This is a test message',
             ]);
             $this->assertEquals('404372541682577504482079', $otpResponse['requestId']);
-        } catch (GuzzleException $e) {
-            $this->fail('This test should not have failed');
-        } catch (AuthenticationException $e) {
-            $this->fail('This test should not have failed');
-        } catch (InvalidPayloadException $e) {
-            $this->fail('This test should not have failed');
-        } catch (InvalidResponseException $e) {
-            $this->fail('This test should not have failed');
-        } catch (ResourceNotFoundException $e) {
-            $this->fail('This test should not have failed');
-        } catch (CredentialsException $e) {
+        } catch (\Throwable $e) {
             $this->fail('This test should not have failed');
         }
     }
@@ -239,27 +186,18 @@ class OtpTest extends TestCase
         $this->expectException(InvalidPayloadException::class);
 
         try {
-
             $messageExpiry = new \DateTime('now', new \DateTimeZone('UTC'));
             $messageExpiry->add(new \DateInterval('PT1H'));
 
             $otp = new Otp();
             // failing with using non UTF8 text.
-            $otp->rawPayload(['message' => utf8_decode("ü"), 'messageExpiryDateTime' => $messageExpiry]);
-        } catch (ResourceNotFoundException $e) {
-            $this->fail('This test should not have failed');
-        } catch (CredentialsException $e) {
-            $this->fail('This test should not have failed');
-        } catch (GuzzleException $e) {
-            $this->fail('This test should not have failed');
-        } catch (AuthenticationException $e) {
-            $this->fail('This test should not have failed');
-        } catch (InvalidResponseException $e) {
+            $otp->rawPayload(['message' => mb_convert_encoding("ü", 'ISO-8859-1', 'UTF-8'), 'messageExpiryDateTime' => $messageExpiry]);
+        } catch (ResourceNotFoundException|CredentialsException|GuzzleException|AuthenticationException|InvalidResponseException $e) {
             $this->fail('This test should not have failed');
         }
     }
 
-    public function testHttpClientBadRequestException()
+    public function testHttpClientBadRequestException(): void
     {
         $this->expectException(GuzzleException::class);
 
@@ -274,20 +212,12 @@ class OtpTest extends TestCase
             $otp = new Otp($client);
             // failing with using non UTF8 text.
             $otp->rawPayload(['destination' => 'destination', 'message' => 'OTP message without placeholder']);
-        } catch (CredentialsException $e) {
-            $this->fail('This test should not have failed');
-        } catch (AuthenticationException $e) {
-            $this->fail('This test should not have failed');
-        } catch (InvalidPayloadException $e) {
-            $this->fail('This test should not have failed');
-        } catch (ResourceNotFoundException $e) {
-            $this->fail('This test should not have failed');
-        } catch (InvalidResponseException $e) {
+        } catch (CredentialsException|AuthenticationException|InvalidPayloadException|ResourceNotFoundException|InvalidResponseException $e) {
             $this->fail('This test should not have failed');
         }
     }
 
-    public function testVerfiyByRequestIdNotFound(): void
+    public function testVerifyByRequestIdNotFound(): void
     {
         $this->expectException(ResourceNotFoundException::class);
 
@@ -301,13 +231,7 @@ class OtpTest extends TestCase
         try {
             $otp = new Otp($client);
             $otp->verifyByRequestId('404372541682577504482079', '432423');
-        } catch (CredentialsException $e) {
-            $this->fail('This test should not have failed');
-        } catch (GuzzleException $e) {
-            $this->fail('This test should not have failed');
-        } catch (AuthenticationException $e) {
-            $this->fail('This test should not have failed');
-        } catch (InvalidResponseException $e) {
+        } catch (CredentialsException|GuzzleException|AuthenticationException|InvalidResponseException $e) {
             $this->fail('This test should not have failed');
         }
     }
@@ -329,15 +253,7 @@ class OtpTest extends TestCase
             $this->assertEquals('404372541682577504482079', $otpResponse['requestId']);
             $this->assertEquals('Verified', $otpResponse['status']);
             $this->assertEquals('61400000000', $otpResponse['destination']);
-        } catch (GuzzleException $e) {
-            $this->fail('This test should not have failed');
-        } catch (CredentialsException $e) {
-            $this->fail('This test should not have failed');
-        } catch (AuthenticationException $e) {
-            $this->fail('This test should not have failed');
-        } catch (InvalidResponseException $e) {
-            $this->fail('This test should not have failed');
-        } catch (ResourceNotFoundException $e) {
+        } catch (\Throwable $e) {
             $this->fail('This test should not have failed');
         }
     }
@@ -349,21 +265,13 @@ class OtpTest extends TestCase
         try {
             $otp = new Otp();
             // failing with using non UTF8 text.
-            $otp->verifyByRequestId('404372541682577504482079', utf8_decode("ü"));
-        } catch (ResourceNotFoundException $e) {
-            $this->fail('This test should not have failed');
-        } catch (CredentialsException $e) {
-            $this->fail('This test should not have failed');
-        } catch (GuzzleException $e) {
-            $this->fail('This test should not have failed');
-        } catch (AuthenticationException $e) {
-            $this->fail('This test should not have failed');
-        } catch (InvalidResponseException $e) {
+            $otp->verifyByRequestId('404372541682577504482079', mb_convert_encoding("ü", 'ISO-8859-1', 'UTF-8'));
+        } catch (ResourceNotFoundException|CredentialsException|GuzzleException|AuthenticationException|InvalidResponseException $e) {
             $this->fail('This test should not have failed');
         }
     }
 
-    public function testVerfiyByDestinationNotFound(): void
+    public function testVerifyByDestinationNotFound(): void
     {
         $this->expectException(ResourceNotFoundException::class);
 
@@ -377,13 +285,7 @@ class OtpTest extends TestCase
         try {
             $otp = new Otp($client);
             $otp->verifyByDestination('61400000000', '432423');
-        } catch (CredentialsException $e) {
-            $this->fail('This test should not have failed');
-        } catch (GuzzleException $e) {
-            $this->fail('This test should not have failed');
-        } catch (AuthenticationException $e) {
-            $this->fail('This test should not have failed');
-        } catch (InvalidResponseException $e) {
+        } catch (CredentialsException|GuzzleException|AuthenticationException|InvalidResponseException $e) {
             $this->fail('This test should not have failed');
         }
     }
@@ -404,15 +306,7 @@ class OtpTest extends TestCase
             $otpResponse = $otp->verifyByDestination('404372541682577504482079', '42112');
             $this->assertEquals('Verified', $otpResponse['status']);
             $this->assertEquals('61400000000', $otpResponse['destination']);
-        } catch (GuzzleException $e) {
-            $this->fail('This test should not have failed');
-        } catch (CredentialsException $e) {
-            $this->fail('This test should not have failed');
-        } catch (AuthenticationException $e) {
-            $this->fail('This test should not have failed');
-        } catch (InvalidResponseException $e) {
-            $this->fail('This test should not have failed');
-        } catch (ResourceNotFoundException $e) {
+        } catch (\Throwable $e) {
             $this->fail('This test should not have failed');
         }
     }

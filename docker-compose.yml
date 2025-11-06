@@ -1,0 +1,8 @@
+services:
+  smsglobal-php:
+    build:
+      context: .
+    container_name: smsglobal-php
+    volumes:
+      - .:/smsglobal
+    command: tail -f /dev/null # This just keeps the container alive after the composer install CMD

@@ -12,7 +12,6 @@ use SMSGlobal\Exceptions\CredentialsException;
  */
 class CredentialsTest extends TestCase
 {
-
     public function testCredentialsGet(): void
     {
         $this->expectException(CredentialsException::class);
@@ -50,5 +49,4 @@ class CredentialsTest extends TestCase
             $this->fail('This test should not have failed');
         }
     }
-
 }

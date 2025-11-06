@@ -5,6 +5,7 @@ namespace SMSGlobal\Resource;
 use GuzzleHttp\Exception\GuzzleException;
 use SMSGlobal\Exceptions\AuthenticationException;
 use SMSGlobal\Exceptions\InvalidResponseException;
+use SMSGlobal\Exceptions\PaymentRequiredException;
 use SMSGlobal\Exceptions\ResourceNotFoundException;
 
 /**
@@ -13,11 +14,10 @@ use SMSGlobal\Exceptions\ResourceNotFoundException;
  */
 class SmsIncoming extends Base
 {
-
     /**
      * @var string
      */
-    private $resourceUri = '/sms-incoming';
+    private string $resourceUri = '/sms-incoming';
 
     /**
      * @param string $smsglobalId
@@ -26,6 +26,7 @@ class SmsIncoming extends Base
      * @throws GuzzleException
      * @throws InvalidResponseException
      * @throws ResourceNotFoundException
+     * @throws PaymentRequiredException
      */
     public function getById(string $smsglobalId): array
     {
@@ -35,7 +36,7 @@ class SmsIncoming extends Base
             'headers' => [
                 'Authorization' => $this->credentials->getAuthorizationHeader('GET', $incomingUri, $this->domain),
                 'user-agent' => $this->userAgent,
-                'content-type' => 'application/json'
+                'content-type' => 'application/json',
             ]
         ]);
 
@@ -48,6 +49,7 @@ class SmsIncoming extends Base
      * @throws AuthenticationException
      * @throws GuzzleException
      * @throws ResourceNotFoundException
+     * @throws PaymentRequiredException
      */
     public function deleteById(string $smsglobalId): bool
     {
@@ -57,11 +59,10 @@ class SmsIncoming extends Base
             'headers' => [
                 'Authorization' => $this->credentials->getAuthorizationHeader('DELETE', $incomingUri, $this->domain),
                 'user-agent' => $this->userAgent,
-                'content-type' => 'application/json'
+                'content-type' => 'application/json',
             ]
         ]);
 
         return $this->lastResponse->getStatusCode() == 204;
     }
-
 }

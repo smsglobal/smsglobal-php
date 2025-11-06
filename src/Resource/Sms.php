@@ -6,6 +6,7 @@ use GuzzleHttp\Exception\GuzzleException;
 use SMSGlobal\Exceptions\AuthenticationException;
 use SMSGlobal\Exceptions\InvalidPayloadException;
 use SMSGlobal\Exceptions\InvalidResponseException;
+use SMSGlobal\Exceptions\PaymentRequiredException;
 use SMSGlobal\Exceptions\ResourceNotFoundException;
 
 /**
@@ -14,11 +15,10 @@ use SMSGlobal\Exceptions\ResourceNotFoundException;
  */
 class Sms extends Base
 {
-
     /**
      * @var string
      */
-    private $resourceUri = '/sms';
+    private string $resourceUri = '/sms';
 
     /**
      * @param string $to
@@ -30,15 +30,16 @@ class Sms extends Base
      * @throws InvalidPayloadException
      * @throws InvalidResponseException
      * @throws ResourceNotFoundException
+     * @throws PaymentRequiredException
      */
-    public function sendToOne(string $to, string $text, string $from = null): array
+    public function sendToOne(string $to, string $text, ?string $from = null): array
     {
         $origin = !empty($from) ? $from : '';
 
         return $this->rawPayload([
             "destination" => $to,
             "message" => $text,
-            "origin" => $origin
+            "origin" => $origin,
         ]);
     }
 
@@ -52,15 +53,16 @@ class Sms extends Base
      * @throws InvalidPayloadException
      * @throws InvalidResponseException
      * @throws ResourceNotFoundException
+     * @throws PaymentRequiredException
      */
-    public function sendToMultiple(array $to, string $text, string $from = null): array
+    public function sendToMultiple(array $to, string $text, ?string $from = null): array
     {
         $origin = !empty($from) ? $from : '';
 
         return $this->rawPayload([
             "destinations" => $to,
             "message" => $text,
-            "origin" => $origin
+            "origin" => $origin,
         ]);
     }
 
@@ -72,12 +74,13 @@ class Sms extends Base
      * @throws InvalidPayloadException
      * @throws InvalidResponseException
      * @throws ResourceNotFoundException
+     * @throws PaymentRequiredException
      */
     public function rawPayload(array $payload): array
     {
         $jsonPayload = json_encode($payload, JSON_FORCE_OBJECT);
 
-        if(!$jsonPayload) {
+        if (!$jsonPayload) {
             throw new InvalidPayloadException('Invalid payload ' . json_last_error_msg());
         }
 
@@ -88,7 +91,7 @@ class Sms extends Base
             'headers' => [
                 'Authorization' => $this->credentials->getAuthorizationHeader('POST', $uri, $this->domain),
                 'user-agent' => $this->userAgent,
-                'content-type' => 'application/json'
+                'content-type' => 'application/json',
             ]
         ]);
 
@@ -97,11 +100,12 @@ class Sms extends Base
 
     /**
      * @param string $smsglobalId
-     * @return mixed|null
+     * @return array
      * @throws AuthenticationException
      * @throws GuzzleException
      * @throws ResourceNotFoundException
      * @throws InvalidResponseException
+     * @throws PaymentRequiredException
      */
     public function getById(string $smsglobalId): array
     {
@@ -111,7 +115,7 @@ class Sms extends Base
             'headers' => [
                 'Authorization' => $this->credentials->getAuthorizationHeader('GET', $uri, $this->domain),
                 'user-agent' => $this->userAgent,
-                'content-type' => 'application/json'
+                'content-type' => 'application/json',
             ]
         ]);
 
@@ -124,6 +128,7 @@ class Sms extends Base
      * @throws AuthenticationException
      * @throws GuzzleException
      * @throws ResourceNotFoundException
+     * @throws PaymentRequiredException
      */
     public function deleteById(string $smsglobalId): bool
     {
@@ -133,11 +138,10 @@ class Sms extends Base
             'headers' => [
                 'Authorization' => $this->credentials->getAuthorizationHeader('DELETE', $uri, $this->domain),
                 'user-agent' => $this->userAgent,
-                'content-type' => 'application/json'
+                'content-type' => 'application/json',
             ]
         ]);
 
         return $this->lastResponse->getStatusCode() == 204;
     }
-
 }
