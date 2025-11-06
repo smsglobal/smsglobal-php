@@ -13,27 +13,27 @@ class Credentials
     /**
      * Hash Algorithm for API Authentication
      */
-    const HASH_ALGO = 'sha256';
+    const string HASH_ALGO = 'sha256';
 
     /**
-     * @var string
+     * @var string|null
      */
-    private $apiKey = null;
+    private ?string $apiKey = null;
 
     /**
-     * @var string
+     * @var string|null
      */
-    private $secretKey = null;
+    private ?string $secretKey = null;
 
     /**
-     * @var Credentials
+     * @var Credentials|null
      */
-    private static $credentials;
+    private static ?Credentials $credentials = null;
 
     /**
      * @param $apiKey
      */
-    private function setApiKey($apiKey)
+    private function setApiKey($apiKey): void
     {
         $this->apiKey = $apiKey;
     }
@@ -41,7 +41,7 @@ class Credentials
     /**
      * @param $apiSecretKey
      */
-    private function setSecretKey($apiSecretKey)
+    private function setSecretKey($apiSecretKey): void
     {
         $this->secretKey = $apiSecretKey;
     }
@@ -63,11 +63,11 @@ class Credentials
     }
 
     /**
-     * Credentials constructor.
      * @param string $apiKey
      * @param string $apiSecret
+     * @return Credentials
      */
-    static public function set(string $apiKey, string $apiSecret)
+    static public function set(string $apiKey, string $apiSecret): Credentials
     {
         if (is_null(self::$credentials)) {
             self::$credentials = new Credentials();
@@ -75,15 +75,17 @@ class Credentials
 
         self::$credentials->setApiKey($apiKey);
         self::$credentials->setSecretKey($apiSecret);
+
+        return self::$credentials;
     }
 
     /**
      * @return Credentials
      * @throws CredentialsException
      */
-    static public function get()
+    static public function get(): Credentials
     {
-        if(is_null(self::$credentials)) {
+        if (is_null(self::$credentials)) {
             throw new CredentialsException('Credentials not set');
         }
 
@@ -93,7 +95,7 @@ class Credentials
     /**
      * Gets the value to use for the Authorization header
      *
-     * @param string $method HTTP method (e.g. GET)
+     * @param string $method HTTP method (eg. GET)
      * @param string $requestUri Request URI (e.g. /v2/sms/)
      * @param string $host Hostname
      * @return string
@@ -122,13 +124,13 @@ class Credentials
      * @param int $port Port (e.g. 443)
      * @return string
      */
-    private function hashRequest(int $timestamp, string $nonce, string $method, string $requestUri, string $host, int $port = 443)
+    private function hashRequest(int $timestamp, string $nonce, string $method, string $requestUri, string $host, int $port = 443): string
     {
         $string = array($timestamp, $nonce, $method, $requestUri, $host, $port, '');
         $string = sprintf("%s\n", implode("\n", $string));
         $hash = hash_hmac(self::HASH_ALGO, $string, $this->getSecretKey(), true);
         $hash = base64_encode($hash);
+
         return $hash;
     }
-
 }

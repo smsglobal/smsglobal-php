@@ -9,7 +9,6 @@ use Psr\Http\Message\ResponseInterface;
 use SMSGlobal\Credentials;
 use SMSGlobal\Exceptions\AuthenticationException;
 use SMSGlobal\Exceptions\CredentialsException;
-use SMSGlobal\Exceptions\InvalidPayloadException;
 use SMSGlobal\Exceptions\InvalidResponseException;
 use SMSGlobal\Exceptions\PaymentRequiredException;
 use SMSGlobal\Exceptions\ResourceNotFoundException;
@@ -20,38 +19,35 @@ use SMSGlobal\Exceptions\ResourceNotFoundException;
  */
 class Base
 {
+    /** @var string Date format accepted by the server */
+    const string DATE_FORMAT = 'Y-m-d H:i:s';
 
-
-    /** @var string Date format accepted by the server*/
-    const DATE_FORMAT = 'Y-m-d H:i:s';
-
-
-    const CLIENT_VERSION = '1.0.4';
+    const string CLIENT_VERSION = '1.0.4';
 
     /**
-     * @var Credentials null
+     * @var Credentials|null
      */
-    protected $credentials = null;
+    protected ?Credentials $credentials = null;
 
     /**
      * @var string
      */
-    protected $version = 'v2';
+    protected string $version = 'v2';
 
     /**
      * @var string
      */
-    protected $domain = 'api.smsglobal.com';
+    protected string $domain = 'api.smsglobal.com';
 
     /**
      * @var string
      */
-    protected $host = 'https://api.smsglobal.com';
+    protected string $host = 'https://api.smsglobal.com';
 
     /**
      * @var string
      */
-    protected $userAgent = "SMSGlobal-SDK/v2 Version/" . self::CLIENT_VERSION . " PHP/" . PHP_VERSION . " (" . PHP_OS . "; " . OPENSSL_VERSION_TEXT. ")";
+    protected string $userAgent = "SMSGlobal-SDK/v2 Version/" . self::CLIENT_VERSION . " PHP/" . PHP_VERSION . " (" . PHP_OS . "; " . OPENSSL_VERSION_TEXT. ")";
 
     /**
      * @var Client|ClientInterface|null
@@ -59,16 +55,16 @@ class Base
     protected $client;
 
     /**
-     * @var ResponseInterface null
+     * @var ResponseInterface|null
      */
-    public $lastResponse = null;
+    public ?ResponseInterface $lastResponse = null;
 
     /**
      * Base constructor.
      * @param ClientInterface|null $client
      * @throws CredentialsException
      */
-    public function __construct(ClientInterface $client = null)
+    public function __construct(?ClientInterface $client = null)
     {
         $this->credentials = Credentials::get();
         $this->client = $client ?: new Client();
@@ -87,20 +83,27 @@ class Base
      * @param string $method
      * @param string $url
      * @param array $options
-     * @return ResponseInterface|null
-     * @throws ResourceNotFoundException
+     * @return ResponseInterface
      * @throws AuthenticationException
      * @throws GuzzleException
+     * @throws PaymentRequiredException
+     * @throws ResourceNotFoundException
      */
     protected function doCall(string $method, string $url, array $options = []): ResponseInterface
     {
-        $response = null;
         try {
             $response = $this->client->request($method, $url, $options);
         } catch (GuzzleException $e) {
-            if($e->getCode() == 402) throw new PaymentRequiredException($e->getMessage());
-            if($e->getCode() == 403) throw new AuthenticationException($e->getMessage());
-            if($e->getCode() == 404) throw new ResourceNotFoundException($e->getMessage());
+            if ($e->getCode() == 402) {
+                throw new PaymentRequiredException($e->getMessage());
+            }
+            if ($e->getCode() == 403) {
+                throw new AuthenticationException($e->getMessage());
+            }
+            if ($e->getCode() == 404){
+                throw new ResourceNotFoundException($e->getMessage());
+            }
+
             throw $e;
         }
 
@@ -112,13 +115,13 @@ class Base
      * @return array
      * @throws InvalidResponseException
      */
-    protected function getJsonDecode(string $jsonString)
+    protected function getJsonDecode(string $jsonString): array
     {
          $arr = json_decode($jsonString, true);
-         if(is_null($arr)) {
+         if (is_null($arr)) {
              throw new InvalidResponseException('Invalid JSON response string');
          }
+
          return $arr;
     }
-
 }

@@ -68,15 +68,15 @@ try {
 }
 ```
 
-The following json response will be returned by the server:
+The server returns the following JSON response:
 
 ```json
 
 {
     "requestId": "404372541683674336263499",
-    "validUnitlTimestamp": "2020-11-18 16:24:51",
-    "createdTimestamp": "2020-11-18 16:22:51",
-    "lastEventTimestamp": "2020-11-18 16:22:51",
+    "validUnitlTimestamp": "2025-11-01 16:24:51",
+    "createdTimestamp": "2025-11-01 16:22:51",
+    "lastEventTimestamp": "2025-11-01 16:22:51",
     "destination": "61400000000",
     "status": "Sent"
 }
@@ -86,12 +86,11 @@ The following json response will be returned by the server:
 
 **Verify OTP**
 
-The OTP code entered by your user can be verified by either using `requestId` or `destination number`. The followings are examples of each method:
+The OTP code entered by your user can be verified by either using `requestId` or `destination number`. The following are examples of each method:
 
 ```php
 
 <?php
-
 
 require_once __DIR__ . '/vendor/autoload.php';
 
@@ -101,7 +100,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 $otp = new \SMSGlobal\Resource\Otp();
 
 try {
-    $response = $otp->verifyByRequestId('request Id', 'OTP code enterted by your user.');
+    $response = $otp->verifyByRequestId('request Id', 'OTP code entered by your user.');
     print_r($response);
 } catch (\Exception $e) {
     echo $e->getMessage();
@@ -119,22 +118,22 @@ require_once __DIR__ . '/vendor/autoload.php';
 $otp = new \SMSGlobal\Resource\Otp();
 
 try {
-    $response = $otp->verifyByDestination('destination number', 'OTP code enterted by your user.');
+    $response = $otp->verifyByDestination('destination number', 'OTP code entered by your user.');
     print_r($response);
 } catch (\Exception $e) {
     echo $e->getMessage();
 }
 ```
 
-The following json response will be returned by the server if verification is successfull:
+The server returns the following JSON response if verification is successful:
 
 ```json
 
 {
     "requestId": "404372541683674336263499",
-    "validUnitlTimestamp": "2020-11-18 16:24:51",
-    "createdTimestamp": "2020-11-18 16:22:51",
-    "lastEventTimestamp": "2020-11-18 16:22:51",
+    "validUnitlTimestamp": "2025-11-01 16:24:51",
+    "createdTimestamp": "2025-11-01 16:22:51",
+    "lastEventTimestamp": "2025-11-01 16:22:51",
     "destination": "61400000000",
     "status": "Verified"
 }
@@ -181,15 +180,15 @@ try {
 ```
 
 
-The following json response will be returned by the server if cancellation is successfull:
+The server returns the following JSON response if cancellation is successful:
 
 ```json
 
 {
     "requestId": "404372541683674336263499",
-    "validUnitlTimestamp": "2020-11-18 16:24:51",
-    "createdTimestamp": "2020-11-18 16:22:51",
-    "lastEventTimestamp": "2020-11-18 16:22:51",
+    "validUnitlTimestamp": "2025-11-01 16:24:51",
+    "createdTimestamp": "2025-11-01 16:22:51",
+    "lastEventTimestamp": "2025-11-01 16:22:51",
     "destination": "61400000000",
     "status": "Cancelled"
 }
@@ -201,7 +200,7 @@ The following json response will be returned by the server if cancellation is su
 
 * Sms
 * Sms Incoming
-* OTP (beta)
+* OTP
 * User
 
 

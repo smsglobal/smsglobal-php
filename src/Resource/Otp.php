@@ -2,16 +2,17 @@
 
 namespace SMSGlobal\Resource;
 
-use Cassandra\Date;
+use DateTime;
+use GuzzleHttp\Exception\GuzzleException;
 use SMSGlobal\Exceptions\AuthenticationException;
 use SMSGlobal\Exceptions\InvalidPayloadException;
 use SMSGlobal\Exceptions\InvalidResponseException;
+use SMSGlobal\Exceptions\PaymentRequiredException;
 use SMSGlobal\Exceptions\ResourceNotFoundException;
 
 /**
  * Class Otp
  *
- * This api resource is currently a beta release
  * @package SMSGlobal\Resource
  */
 class Otp extends Base
@@ -19,15 +20,15 @@ class Otp extends Base
     /**
      * @var string
      */
-    protected $resourceUri = '/otp';
+    protected string $resourceUri = '/otp';
 
     /**
      * @param string $to
      * @param string $text
      * @param string|null $from
-     * @param int $codeExpiry
-     * @param int $length
-     * @param \DateTime|null $messageExpiryDateTime
+     * @param string|null $codeExpiry
+     * @param string|null $length
+     * @param DateTime|null $messageExpiryDateTime
      *
      * @return array
      * @throws AuthenticationException
@@ -35,10 +36,8 @@ class Otp extends Base
      * @throws InvalidPayloadException
      * @throws InvalidResponseException
      * @throws ResourceNotFoundException
-     * @version beta
      */
-
-    public function send(string $to, string $text, string $from = null, string $codeExpiry = null, string $length = null, \DateTime $messageExpiryDateTime = null): array
+    public function send(string $to, string $text, ?string $from = null, ?string $codeExpiry = null, ?string $length = null, ?DateTime $messageExpiryDateTime = null): array
     {
         $origin = !empty($from) ? $from : '';
         $codeExpiry = !empty($codeExpiry) ? $codeExpiry : '';
@@ -56,7 +55,7 @@ class Otp extends Base
     }
 
     /**
-     * Verify an OTP code entered by your customer using request ID received upon sending an OTP
+     * Verify an OTP code entered by your customer using request-ID received upon sending an OTP
      *
      * @param string $requestId Request ID
      * @param string $code      OTP code
@@ -64,11 +63,11 @@ class Otp extends Base
      * @return array
      * @throws AuthenticationException
      * @throws InvalidPayloadException
+     * @throws InvalidResponseException
      * @throws ResourceNotFoundException
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @version beta
+     * @throws GuzzleException
      */
-    public function verifyByRequestId(string $requestId, string $code)
+    public function verifyByRequestId(string $requestId, string $code): array
     {
         $uri = $this->prepareApiUri($this->resourceUri . '/requestid/' . $requestId . '/validate');
 
@@ -76,7 +75,7 @@ class Otp extends Base
     }
 
     /**
-     * Verify an OTP code entered by your customer using destination number
+     * Verify an OTP code entered by your customer using the destination number
      *
      * @param string $destination Destination number
      * @param string $code
@@ -86,10 +85,9 @@ class Otp extends Base
      * @throws InvalidPayloadException
      * @throws InvalidResponseException
      * @throws ResourceNotFoundException
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @version beta
+     * @throws GuzzleException
      */
-    public function verifyByDestination(string $destination, string $code)
+    public function verifyByDestination(string $destination, string $code): array
     {
         $uri = $this->prepareApiUri($this->resourceUri . '/' . $destination . '/validate');
 
@@ -97,7 +95,6 @@ class Otp extends Base
     }
 
     /**
-     *
      * @param string $uri  Request path
      * @param string $code OTP code
      *
@@ -106,10 +103,10 @@ class Otp extends Base
      * @throws InvalidPayloadException
      * @throws InvalidResponseException
      * @throws ResourceNotFoundException
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @version beta
+     * @throws GuzzleException
+     * @throws PaymentRequiredException
      */
-    private function verify($uri, $code)
+    private function verify(string $uri, string $code): array
     {
         $jsonPayload = json_encode(compact('code'), JSON_FORCE_OBJECT);
 
@@ -138,10 +135,9 @@ class Otp extends Base
      * @throws AuthenticationException
      * @throws InvalidResponseException
      * @throws ResourceNotFoundException
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @version beta
+     * @throws GuzzleException
      */
-    public function cancelByRequestId(string $requestId)
+    public function cancelByRequestId(string $requestId): array
     {
         $uri = $this->prepareApiUri($this->resourceUri . '/requestid/' . $requestId . '/cancel');
 
@@ -157,10 +153,9 @@ class Otp extends Base
      * @throws AuthenticationException
      * @throws InvalidResponseException
      * @throws ResourceNotFoundException
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @version beta
+     * @throws GuzzleException
      */
-    public function cancelByDestination($destination)
+    public function cancelByDestination(string $destination): array
     {
         $uri = $this->prepareApiUri($this->resourceUri . '/' . $destination . '/cancel');
 
@@ -174,10 +169,9 @@ class Otp extends Base
      * @throws AuthenticationException
      * @throws InvalidResponseException
      * @throws ResourceNotFoundException
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @version beta
+     * @throws GuzzleException
      */
-    private function cancel($uri)
+    private function cancel(string $uri): array
     {
         $this->lastResponse = $this->doCall('POST', $this->host . $uri, [
             'headers' => [
@@ -191,8 +185,7 @@ class Otp extends Base
     }
 
     /**
-     * Send OTP with raw payload; Destination and message are required.
-     *
+     * Send OTP with a raw payload; Destination and message are required.
      *
      * @param array $payload
      *
@@ -202,11 +195,10 @@ class Otp extends Base
      * @throws InvalidPayloadException
      * @throws InvalidResponseException
      * @throws ResourceNotFoundException
-     * @version beta
      */
-    public function rawPayload(array $payload)
+    public function rawPayload(array $payload): array|null
     {
-        if (isset($payload['messageExpiryDateTime']) && $payload['messageExpiryDateTime'] instanceof \DateTime) {
+        if (isset($payload['messageExpiryDateTime']) && $payload['messageExpiryDateTime'] instanceof DateTime) {
             $payload['messageExpiryDateTime'] = $payload['messageExpiryDateTime']->format(self::DATE_FORMAT);
         }
 
@@ -229,5 +221,4 @@ class Otp extends Base
 
         return $this->getJsonDecode($this->lastResponse->getBody()->getContents());
     }
-
 }

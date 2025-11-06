@@ -1,15 +1,18 @@
 <?php
 
+use SMSGlobal\Credentials;
+use SMSGlobal\Resource\Otp;
+
 require_once __DIR__ . '/vendor/autoload.php';
 
 // get your REST API keys from MXT https://mxt.smsglobal.com/integrations
-\SMSGlobal\Credentials::set('YOUR_API_KEY', 'YOUR_SECRET_KEY');
+Credentials::set('YOUR_API_KEY', 'YOUR_SECRET_KEY');
 
-$otp = new \SMSGlobal\Resource\Otp();
+$otp = new Otp();
 
 try {
     $response = $otp->cancelByDestination('destination number');
     print_r($response);
-} catch (\Exception $e) {
+} catch (\Throwable $e) {
     echo $e->getMessage();
 }

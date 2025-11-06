@@ -5,6 +5,7 @@ namespace SMSGlobal\Resource;
 use GuzzleHttp\Exception\GuzzleException;
 use SMSGlobal\Exceptions\AuthenticationException;
 use SMSGlobal\Exceptions\InvalidResponseException;
+use SMSGlobal\Exceptions\PaymentRequiredException;
 use SMSGlobal\Exceptions\ResourceNotFoundException;
 
 /**
@@ -13,11 +14,10 @@ use SMSGlobal\Exceptions\ResourceNotFoundException;
  */
 class User extends Base
 {
-
     /**
      * @var string
      */
-    private $resourceUri = '/user';
+    private string $resourceUri = '/user';
 
     /**
      * @return array
@@ -25,6 +25,7 @@ class User extends Base
      * @throws GuzzleException
      * @throws InvalidResponseException
      * @throws ResourceNotFoundException
+     * @throws PaymentRequiredException
      */
     public function getBalance(): array
     {
@@ -34,11 +35,10 @@ class User extends Base
             'headers' => [
                 'Authorization' => $this->credentials->getAuthorizationHeader('GET', $uri, $this->domain),
                 'user-agent' => $this->userAgent,
-                'content-type' => 'application/json'
+                'content-type' => 'application/json',
             ]
         ]);
 
         return $this->getJsonDecode($this->lastResponse->getBody()->getContents());
     }
-
 }

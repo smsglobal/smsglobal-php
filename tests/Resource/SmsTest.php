@@ -15,14 +15,14 @@ use SMSGlobal\Exceptions\InvalidPayloadException;
 use SMSGlobal\Exceptions\InvalidResponseException;
 use SMSGlobal\Exceptions\ResourceNotFoundException;
 use SMSGlobal\Resource\Sms;
+use Throwable;
 
 class SmsTest extends TestCase
 {
+    protected Credentials $credentials;
 
-    protected $credentials;
-
-    protected $apiKey = 'key12345';
-    protected $apiSecret = 'secret12345';
+    protected string $apiKey = 'key12345';
+    protected string $apiSecret = 'secret12345';
 
     public function setUp(): void
     {
@@ -48,11 +48,7 @@ class SmsTest extends TestCase
         try {
             $sms = new Sms($client);
             $sms->deleteById('123');
-        } catch (CredentialsException $e) {
-            $this->fail('This test should not have failed');
-        } catch (GuzzleException $e) {
-            $this->fail('This test should not have failed');
-        } catch (AuthenticationException $e) {
+        } catch (CredentialsException|GuzzleException|AuthenticationException $e) {
             $this->fail('This test should not have failed');
         }
     }
@@ -69,13 +65,7 @@ class SmsTest extends TestCase
         try {
             $sms = new Sms($client);
             $this->assertTrue($sms->deleteById('123'));
-        } catch (GuzzleException $e) {
-            $this->fail('This test should not have failed');
-        } catch (AuthenticationException $e) {
-            $this->fail('This test should not have failed');
-        } catch (ResourceNotFoundException $e) {
-            $this->fail('This test should not have failed');
-        } catch (CredentialsException $e) {
+        } catch (Throwable $e) {
             $this->fail('This test should not have failed');
         }
     }
@@ -95,15 +85,7 @@ class SmsTest extends TestCase
             $sms = new Sms($client);
             $smsResponse = $sms->getById('123');
             $this->assertEquals('123', $smsResponse['id']);
-        } catch (GuzzleException $e) {
-            $this->fail('This test should not have failed');
-        } catch (CredentialsException $e) {
-            $this->fail('This test should not have failed');
-        } catch (AuthenticationException $e) {
-            $this->fail('This test should not have failed');
-        } catch (InvalidResponseException $e) {
-            $this->fail('This test should not have failed');
-        } catch (ResourceNotFoundException $e) {
+        } catch (Throwable $e) {
             $this->fail('This test should not have failed');
         }
     }
@@ -122,13 +104,7 @@ class SmsTest extends TestCase
         try {
             $sms = new Sms($client);
             $sms->getById('123');
-        } catch (CredentialsException $e) {
-            $this->fail('This test should not have failed');
-        } catch (GuzzleException $e) {
-            $this->fail('This test should not have failed');
-        } catch (AuthenticationException $e) {
-            $this->fail('This test should not have failed');
-        } catch (InvalidResponseException $e) {
+        } catch (CredentialsException|GuzzleException|AuthenticationException|InvalidResponseException $e) {
             $this->fail('This test should not have failed');
         }
     }
@@ -151,17 +127,7 @@ class SmsTest extends TestCase
             $sms = new Sms($client);
             $smsResponse = $sms->sendToOne('destination', 'This is a test message');
             $this->assertEquals('123', $smsResponse['messages'][0]['id']);
-        } catch (GuzzleException $e) {
-            $this->fail('This test should not have failed');
-        } catch (AuthenticationException $e) {
-            $this->fail('This test should not have failed');
-        } catch (InvalidPayloadException $e) {
-            $this->fail('This test should not have failed');
-        } catch (InvalidResponseException $e) {
-            $this->fail('This test should not have failed');
-        } catch (ResourceNotFoundException $e) {
-            $this->fail('This test should not have failed');
-        } catch (CredentialsException $e) {
+        } catch (Throwable $e) {
             $this->fail('This test should not have failed');
         }
     }
@@ -184,17 +150,7 @@ class SmsTest extends TestCase
             $sms = new Sms($client);
             $smsResponse = $sms->sendToMultiple(['destination'], 'This is a test message');
             $this->assertEquals('123', $smsResponse['messages'][0]['id']);
-        } catch (GuzzleException $e) {
-            $this->fail('This test should not have failed');
-        } catch (CredentialsException $e) {
-            $this->fail('This test should not have failed');
-        } catch (AuthenticationException $e) {
-            $this->fail('This test should not have failed');
-        } catch (InvalidPayloadException $e) {
-            $this->fail('This test should not have failed');
-        } catch (InvalidResponseException $e) {
-            $this->fail('This test should not have failed');
-        } catch (ResourceNotFoundException $e) {
+        } catch (Throwable $e) {
             $this->fail('This test should not have failed');
         }
     }
@@ -217,17 +173,7 @@ class SmsTest extends TestCase
             $sms = new Sms($client);
             $smsResponse = $sms->sendToOne('destination', 'This is a test message', 'origin');
             $this->assertEquals('123', $smsResponse['messages'][0]['id']);
-        } catch (GuzzleException $e) {
-            $this->fail('This test should not have failed');
-        } catch (AuthenticationException $e) {
-            $this->fail('This test should not have failed');
-        } catch (InvalidPayloadException $e) {
-            $this->fail('This test should not have failed');
-        } catch (InvalidResponseException $e) {
-            $this->fail('This test should not have failed');
-        } catch (ResourceNotFoundException $e) {
-            $this->fail('This test should not have failed');
-        } catch (CredentialsException $e) {
+        } catch (Throwable $e) {
             $this->fail('This test should not have failed');
         }
     }
@@ -254,17 +200,7 @@ class SmsTest extends TestCase
                 "origin" => 'origin'
             ]);
             $this->assertEquals('123', $smsResponse['messages'][0]['id']);
-        } catch (GuzzleException $e) {
-            $this->fail('This test should not have failed');
-        } catch (AuthenticationException $e) {
-            $this->fail('This test should not have failed');
-        } catch (InvalidPayloadException $e) {
-            $this->fail('This test should not have failed');
-        } catch (InvalidResponseException $e) {
-            $this->fail('This test should not have failed');
-        } catch (ResourceNotFoundException $e) {
-            $this->fail('This test should not have failed');
-        } catch (CredentialsException $e) {
+        } catch (Throwable $e) {
             $this->fail('This test should not have failed');
         }
     }
@@ -276,21 +212,13 @@ class SmsTest extends TestCase
         try {
             $sms = new Sms();
             // failing with using non UTF8 text.
-            $sms->rawPayload(['message' => utf8_decode("ü")]);
-        } catch (ResourceNotFoundException $e) {
-            $this->fail('This test should not have failed');
-        } catch (CredentialsException $e) {
-            $this->fail('This test should not have failed');
-        } catch (GuzzleException $e) {
-            $this->fail('This test should not have failed');
-        } catch (AuthenticationException $e) {
-            $this->fail('This test should not have failed');
-        } catch (InvalidResponseException $e) {
+            $sms->rawPayload(['message' => mb_convert_encoding("ü", 'ISO-8859-1', 'UTF-8')]);
+        } catch (ResourceNotFoundException|CredentialsException|GuzzleException|AuthenticationException|InvalidResponseException $e) {
             $this->fail('This test should not have failed');
         }
     }
 
-    public function testHttpClientBadRequestException()
+    public function testHttpClientBadRequestException(): void
     {
         $this->expectException(GuzzleException::class);
 
@@ -305,17 +233,8 @@ class SmsTest extends TestCase
             $sms = new Sms($client);
             // failing with using non UTF8 text.
             $sms->rawPayload(['message' => null]);
-        } catch (CredentialsException $e) {
-            $this->fail('This test should not have failed');
-        } catch (AuthenticationException $e) {
-            $this->fail('This test should not have failed');
-        } catch (InvalidPayloadException $e) {
-            $this->fail('This test should not have failed');
-        } catch (ResourceNotFoundException $e) {
-            $this->fail('This test should not have failed');
-        } catch (InvalidResponseException $e) {
+        } catch (CredentialsException|AuthenticationException|InvalidPayloadException|ResourceNotFoundException|InvalidResponseException $e) {
             $this->fail('This test should not have failed');
         }
     }
-
 }
